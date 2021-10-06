@@ -13,4 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/src/test/java/xyz/orangej/acmsigninsystemandroid/LoginTest.kt

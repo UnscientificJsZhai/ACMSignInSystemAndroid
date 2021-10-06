@@ -1,6 +1,5 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -52,13 +51,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      * @param username 用户名。
      * @return 合法性。
      */
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
-    }
+    private fun isUserNameValid(username: String) = username.length in 4..16
 
     /**
      * 检查密码是否合法。
@@ -67,6 +60,19 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      * @return 合法性。
      */
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return if (password.length in 8..16) {
+            var hasDigit = false
+            var hasLetter = false
+            for (char in password) {
+                if (char.isDigit()) {
+                    hasDigit = true
+                } else if (char.isLetter()) {
+                    hasLetter = true
+                }
+            }
+            hasDigit && hasLetter
+        } else {
+            false
+        }
     }
 }

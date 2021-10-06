@@ -4,11 +4,11 @@ import androidx.annotation.WorkerThread
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
 
 /**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
+ * 用于从服务器请求用户信息和身份验证，并把登录状态和用户信息缓存在内存中的类。
+ *
+ * @param dataSource 数据源。
  */
-
-class LoginRepository(val dataSource: LoginDataSource) {
+class LoginRepository(private val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null
@@ -23,9 +23,10 @@ class LoginRepository(val dataSource: LoginDataSource) {
         user = null
     }
 
-    fun logout() {
+    @WorkerThread
+    fun logout(session: String) {
         user = null
-        dataSource.logout()
+        dataSource.logout(session)
     }
 
     @WorkerThread
@@ -34,15 +35,9 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val result = dataSource.login(username, password)
 
         if (result is Result.Success) {
-            setLoggedInUser(result.data)
+            this.user = result.data
         }
 
         return result
-    }
-
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-        this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
     }
 }

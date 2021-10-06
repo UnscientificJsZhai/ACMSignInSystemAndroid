@@ -1,6 +1,7 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityLoginBinding
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,6 +30,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        this.systemApplication = application as SystemApplication
+        if (systemApplication.session.isNotBlank()) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -36,15 +44,14 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        this.systemApplication = application as SystemApplication
-        val loginRepository by this.systemApplication
+        val loginRepository = this.systemApplication.loginRepository
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
-            // disable login button unless both username / password is valid
+            //用户名密码不合法时禁用登录按钮
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
@@ -66,8 +73,7 @@ class LoginActivity : AppCompatActivity() {
                 updateUiWithUser(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         })
 

@@ -1,27 +1,52 @@
 package xyz.orangej.acmsigninsystemandroid.data.login
 
 import androidx.annotation.WorkerThread
+import okhttp3.OkHttpClient
+import org.json.JSONObject
+import xyz.orangej.acmsigninsystemandroid.api.callLogin
+import xyz.orangej.acmsigninsystemandroid.api.callLogout
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
 import java.io.IOException
-import java.util.*
 
 /**
  * 处理登录和身份认证的类。
  */
 class LoginDataSource {
 
+    private val client by lazy {
+        OkHttpClient()
+    }
+
+    /**
+     * 登录的实现。
+     *
+     * @param username 用户名。
+     * @param password 密码。
+     */
     @WorkerThread
     fun login(username: String, password: String): Result<LoggedInUser> {
         try {
-            // TODO: handle loggedInUser authentication
-            val user = LoggedInUser(UUID.randomUUID().toString(), "Jane Doe")
+            val responseBody = client.callLogin(username, password)
+            val responseJsonObject =
+                JSONObject(responseBody ?: return Result.Error(IOException("Empty response")))
+            val user = LoggedInUser(
+                userId = responseJsonObject.getString("sessionId"),
+                displayName = responseJsonObject.getString("username")
+            )
             return Result.Success(user)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }
     }
 
-    fun logout() {
-        // TODO: revoke authentication
+    /**
+     * 退出登录的实现。
+     *
+     * @param session 已经登录账号的session。
+     */
+    @WorkerThread
+    fun logout(session: String) {
+        client.callLogout(session)
+        //TODO 删除本地保存的Session
     }
 }

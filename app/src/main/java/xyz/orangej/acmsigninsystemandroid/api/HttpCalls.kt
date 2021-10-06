@@ -7,6 +7,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 
+/**
+ * 通用的MIME-Type。
+ */
 private val mediaType: MediaType
     get() = MediaType.parse("application/x-www-form-urlencoded")!!
 
@@ -62,6 +65,12 @@ fun OkHttpClient.callLogout(session: String): String? {
     return response.body()?.string()
 }
 
+/**
+ * 请求用户数据。
+ *
+ * @param session 用户的Session。
+ * @return 响应结果json字符串。
+ */
 fun OkHttpClient.callGetUserInfo(session: String): String? {
     val requestBody = RequestBody.create(
         mediaType,

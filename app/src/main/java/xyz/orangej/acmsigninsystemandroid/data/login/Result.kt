@@ -1,8 +1,9 @@
 package xyz.orangej.acmsigninsystemandroid.data.login
 
 /**
- * A generic class that holds a value with its loading status.
- * @param <T>
+ * 对登录结果的封装类。
+ *
+ * @param T 登录结果类
  */
 sealed class Result<out T : Any> {
 
