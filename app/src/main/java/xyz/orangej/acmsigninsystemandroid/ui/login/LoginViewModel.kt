@@ -1,13 +1,14 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
-import xyz.orangej.acmsigninsystemandroid.data.LoginRepository
-import xyz.orangej.acmsigninsystemandroid.data.Result
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
+import xyz.orangej.acmsigninsystemandroid.data.login.LoginRepository
+import xyz.orangej.acmsigninsystemandroid.data.login.Result
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -17,18 +18,24 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    suspend fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = withContext(Dispatchers.IO) { loginRepository.login(username, password) }
 
         if (result is Result.Success) {
             _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                LoginResult(success = LoginResult.LoggedInUserView(displayName = result.data.displayName))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
     }
 
+    /**
+     * 通知输入框中的用户名和密码发生变化，重新检查合法性。
+     *
+     * @param username 改变后的用户名。
+     * @param password 改变后的密码。
+     */
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
@@ -39,7 +46,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    // A placeholder username validation check
+    /**
+     * 检查用户名是否合法。
+     *
+     * @param username 用户名。
+     * @return 合法性。
+     */
     private fun isUserNameValid(username: String): Boolean {
         return if (username.contains('@')) {
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
@@ -48,7 +60,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    // A placeholder password validation check
+    /**
+     * 检查密码是否合法。
+     *
+     * @param password 密码。
+     * @return 合法性。
+     */
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }

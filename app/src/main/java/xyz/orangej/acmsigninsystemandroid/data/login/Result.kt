@@ -1,4 +1,4 @@
-package xyz.orangej.acmsigninsystemandroid.data
+package xyz.orangej.acmsigninsystemandroid.data.login
 
 /**
  * A generic class that holds a value with its loading status.

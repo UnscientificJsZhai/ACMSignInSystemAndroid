@@ -1,6 +1,7 @@
-package xyz.orangej.acmsigninsystemandroid.data
+package xyz.orangej.acmsigninsystemandroid.data.login
 
-import xyz.orangej.acmsigninsystemandroid.data.model.LoggedInUser
+import androidx.annotation.WorkerThread
+import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -27,6 +28,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
+    @WorkerThread
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
         val result = dataSource.login(username, password)

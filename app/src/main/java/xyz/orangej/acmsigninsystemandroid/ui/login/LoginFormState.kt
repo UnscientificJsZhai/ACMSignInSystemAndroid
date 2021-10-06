@@ -1,7 +1,7 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
 /**
- * Data validation state of the login form.
+ * 登录界面的用户名密码表单的合法性检测相关数据类。
  */
 data class LoginFormState(
     val usernameError: Int? = null,

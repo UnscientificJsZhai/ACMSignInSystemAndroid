@@ -1,22 +1,26 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
 import android.app.Activity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import xyz.orangej.acmsigninsystemandroid.R
+import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityLoginBinding
 
-import xyz.orangej.acmsigninsystemandroid.R
-
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var systemApplication: SystemApplication
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
@@ -32,7 +36,9 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+        this.systemApplication = application as SystemApplication
+        val loginRepository by this.systemApplication
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))
             .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
@@ -83,22 +89,26 @@ class LoginActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
+                        login.callOnClick()
                 }
                 false
             }
 
             login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginViewModel.viewModelScope.launch {
+                    loading.visibility = View.VISIBLE
+                    loginViewModel.login(username.text.toString(), password.text.toString())
+                }
             }
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    /**
+     * 更新主页的界面显示。
+     *
+     * @param model 登录成功的用户。
+     */
+    private fun updateUiWithUser(model: LoginResult.LoggedInUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         // TODO : initiate successful logged in experience
@@ -109,22 +119,29 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
+    /**
+     * 显示登录失败的Toast弹窗。
+     *
+     * @param errorString 失败提醒的字符串资源。
+     */
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
-}
 
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
+    /**
+     * 简化为EditText设置afterTextChanged监听的扩展函数。
+     *
+     * @param afterTextChanged 要注册的afterTextChanged逻辑。
+     */
+    private inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> Unit) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                afterTextChanged(editable.toString())
+            }
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }
 }
