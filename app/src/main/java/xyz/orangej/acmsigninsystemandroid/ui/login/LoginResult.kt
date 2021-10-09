@@ -1,7 +1,7 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
 /**
- * Authentication result : success (user details) or error message.
+ * Authentication result : success (UserActivity details) or error message.
  */
 data class LoginResult(
     val success: LoggedInUserView? = null,

@@ -28,7 +28,7 @@ class LoginDataSource {
         try {
             val responseBody = client.callLogin(username, password)
             val responseJsonObject =
-                JSONObject(responseBody ?: return Result.Error(IOException("Empty response")))
+                JSONObject(responseBody ?: return Result.Error(IOException("Empty response"))).getJSONObject("data")
             val user = LoggedInUser(
                 userId = responseJsonObject.getString("sessionId"),
                 displayName = responseJsonObject.getString("username")

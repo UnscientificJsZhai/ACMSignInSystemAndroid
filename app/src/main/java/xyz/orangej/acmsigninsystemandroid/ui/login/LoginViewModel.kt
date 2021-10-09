@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import xyz.orangej.acmsigninsystemandroid.BuildConfig
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.data.login.LoginRepository
 import xyz.orangej.acmsigninsystemandroid.data.login.Result
@@ -17,16 +18,24 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    suspend fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
+    /**
+     * 登录方法。
+     *
+     * @param username 用户名。
+     * @param password 密码。
+     * @return Session。
+     */
+    suspend fun login(username: String, password: String): String {
         val result = withContext(Dispatchers.IO) { loginRepository.login(username, password) }
 
         if (result is Result.Success) {
             _loginResult.value =
                 LoginResult(success = LoginResult.LoggedInUserView(displayName = result.data.displayName))
+            return result.data.userId
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
+        return ""
     }
 
     /**
@@ -60,6 +69,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      * @return 合法性。
      */
     private fun isPasswordValid(password: String): Boolean {
+        if (BuildConfig.BUILD_TYPE == "debug") return true
         return if (password.length in 8..16) {
             var hasDigit = false
             var hasLetter = false

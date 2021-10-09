@@ -103,7 +103,8 @@ class LoginActivity : AppCompatActivity() {
             login.setOnClickListener {
                 loginViewModel.viewModelScope.launch {
                     loading.visibility = View.VISIBLE
-                    loginViewModel.login(username.text.toString(), password.text.toString())
+                    systemApplication.session = //登录成功即保存Session
+                        loginViewModel.login(username.text.toString(), password.text.toString())
                 }
             }
         }
@@ -117,7 +118,6 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: LoginResult.LoggedInUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
