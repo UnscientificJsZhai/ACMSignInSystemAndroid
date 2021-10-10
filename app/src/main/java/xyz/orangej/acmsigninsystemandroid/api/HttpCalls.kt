@@ -86,3 +86,69 @@ fun OkHttpClient.callGetUserInfo(session: String): String? {
     val response = call.execute()
     return response.body()?.string()
 }
+
+/**
+ * 请求训练记录。
+ *
+ * @param session 用户的Session。
+ * @return 响应结果的json字符串。
+ */
+fun OkHttpClient.callGetTrainingHistory(session: String, id: Int): String? {
+    val requestBody = RequestBody.create(
+        mediaType,
+        if (id == 0) {
+            ""
+        } else {
+            "id=$id"
+        }
+    )
+    val request = Request.Builder()
+        .url(trainingHistoryURL())
+        .addSession(session)
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
+}
+
+/**
+ * 请求特定的训练记录。
+ *
+ * @param session 用户的Session。
+ * @param id 要请求的训练记录ID。
+ * @return 响应结果的json字符串。
+ */
+fun OkHttpClient.callGetSpecificTrainingHistory(session: String, id: Int): String? {
+    val requestBody = RequestBody.create(
+        mediaType,
+        "id=$id"
+    )
+    val request = Request.Builder()
+        .url(specificTrainingHistoryURL())
+        .addSession(session)
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
+}
+
+/**
+ * 签到。
+ *
+ * @param session 用户的Session。
+ * @param csrfToken 表单中crsf_token的值。
+ * @param token 表单中token的值。
+ * @param time 表单中time的值。
+ */
+fun OkHttpClient.callSignIn(
+    session: String,
+    csrfToken: String,
+    token: String,
+    time: String
+): String? {
+    TODO()
+}

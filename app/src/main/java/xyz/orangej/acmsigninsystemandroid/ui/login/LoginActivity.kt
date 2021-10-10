@@ -45,8 +45,10 @@ class LoginActivity : AppCompatActivity() {
         val loading = binding.loading
 
         val loginRepository = this.systemApplication.loginRepository
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))
-            .get(LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(loginRepository)
+        )[LoginViewModel::class.java]
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer

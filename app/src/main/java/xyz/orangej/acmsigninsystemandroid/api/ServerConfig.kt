@@ -28,4 +28,23 @@ fun registerURL() = "$SERVER_ADDRESS/api/register/"
  */
 fun logoutURL() = "$SERVER_ADDRESS/api/logout"
 
+/**
+ * 用户数据Url。
+ *
+ * @return 字符串格式的URL。
+ */
 fun userInfoURL() = "$SERVER_ADDRESS/api/getuserinfo/"
+
+/**
+ * 训练记录URL。
+ *
+ * @return 字符串格式的URL。
+ */
+fun trainingHistoryURL() = "$SERVER_ADDRESS/api/getrecord/"
+
+/**
+ * 获取制定的训练记录的URL。
+ *
+ * @return 字符串格式的URL。
+ */
+fun specificTrainingHistoryURL() = "$SERVER_ADDRESS/api/getspecificrecord/"

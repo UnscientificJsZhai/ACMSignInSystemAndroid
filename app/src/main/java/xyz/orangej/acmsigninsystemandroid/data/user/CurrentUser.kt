@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
  * 已经登录的用户信息。在数据库中缓存的数据。
  *
  * @param sessionHash 用户登录用到的session的哈希校验。实际需要获取哈希时则从Application对象中获取。
- * @param uid 用户的uid。
  * @param userName 账号。
  * @param displayName 用户的显示名称。
  * @param email 邮箱。
@@ -19,7 +18,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = CurrentUser.TABLE_NAME)
 data class CurrentUser(
     @PrimaryKey val sessionHash: Int,
-    val uid: String,
     val userName: String,
     val displayName: String,
     val email: String,

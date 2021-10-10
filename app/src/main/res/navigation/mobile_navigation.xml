@@ -7,19 +7,18 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.ui.home.HomeFragment"
+        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.ui.dashboard.DashboardFragment"
+        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.ui.user.UserActivity"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_user" />
+        android:name="xyz.orangej.acmsigninsystemandroid.ui.main.fragments.user.UserFragment"
+        android:label="@string/title_notifications"/>
 </navigation>

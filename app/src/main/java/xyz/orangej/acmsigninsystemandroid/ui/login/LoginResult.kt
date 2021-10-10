@@ -1,7 +1,7 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
 /**
- * Authentication result : success (UserActivity details) or error message.
+ * 登录结果：成功则为用户名，失败则为错误信息。
  */
 data class LoginResult(
     val success: LoggedInUserView? = null,

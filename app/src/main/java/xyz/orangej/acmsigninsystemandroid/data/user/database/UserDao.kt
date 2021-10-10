@@ -27,4 +27,16 @@ interface UserDao {
 
     @Query("SELECT * FROM ${TrainingRecord.TABLE_NAME}")
     fun getTrainingRecords(): LiveData<List<TrainingRecord>>
+
+    @Query("SELECT max(id) FROM ${TrainingRecord.TABLE_NAME}")
+    fun getBiggestRecordId(): Int
+
+    @Query("SELECT * FROM ${TrainingRecord.TABLE_NAME} WHERE status=0 or status=2")
+    fun getUnrecordedRecords(): List<TrainingRecord>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addRecord(record: TrainingRecord)
+
+    @Update
+    fun updateRecord(record: TrainingRecord)
 }
