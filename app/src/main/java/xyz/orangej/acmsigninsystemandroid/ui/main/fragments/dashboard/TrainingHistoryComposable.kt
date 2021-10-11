@@ -11,10 +11,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 
 /**
@@ -61,7 +63,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                 val (id, status, trainingHistoryTitle, record, startTime, endTime) = createRefs()
 
                 Text(
-                    text = "训练记录:${data.id}",
+                    text = stringResource(R.string.trainingRecord_id) + data.id,
                     modifier = Modifier.constrainAs(id) {
                         top.linkTo(parent.top, 8.dp)
                         start.linkTo(parent.start, 16.dp)
@@ -76,29 +78,29 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                 }
                 when (data.status) {
                     TrainingRecord.STATUS_UNFINISHED -> Text(
-                        text = "未完成",
+                        text = stringResource(R.string.trainingRecord_status_0),
                         modifier = statusModifier,
                         color = Color.Red
                     )
                     TrainingRecord.STATUS_NOT_VALID -> Text(
-                        text = "无效",
+                        text = stringResource(R.string.trainingRecord_status_1),
                         modifier = statusModifier,
                         color = Color.Red
                     )
                     TrainingRecord.STATUS_NOT_RECORDED -> Text(
-                        text = "未记录",
+                        text = stringResource(R.string.trainingRecord_status_2),
                         modifier = statusModifier,
                         color = Color(0xFFFFA500)
                     )
                     TrainingRecord.STATUS_RECORDED -> Text(
-                        text = "已记录",
+                        text = stringResource(R.string.trainingRecord_status_3),
                         modifier = statusModifier,
                         color = mainTextColor()
                     )
                 }
 
                 Text(
-                    text = "训练时长",
+                    text = stringResource(R.string.trainingRecord_length),
                     modifier = Modifier.constrainAs(trainingHistoryTitle) {
                         top.linkTo(id.bottom, 16.dp)
                         start.linkTo(parent.start, 16.dp)
@@ -122,7 +124,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
 
                 if (expanded) {
                     Text(
-                        text = "开始于 ${data.startTime}",
+                        text = stringResource(R.string.trainingRecord_start) + data.startTime,
                         modifier = Modifier.constrainAs(startTime) {
                             top.linkTo(record.bottom, 16.dp)
                             start.linkTo(parent.start, 16.dp)
@@ -132,7 +134,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                     )
 
                     Text(
-                        text = "结束于 ${data.endTime}",
+                        text = stringResource(R.string.trainingRecord_end) + data.endTime,
                         modifier = Modifier.constrainAs(endTime) {
                             top.linkTo(startTime.bottom, 8.dp)
                             start.linkTo(startTime.start, 0.dp)

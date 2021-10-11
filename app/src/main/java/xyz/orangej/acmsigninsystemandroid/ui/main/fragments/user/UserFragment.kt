@@ -13,6 +13,9 @@ import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel
 import xyz.orangej.acmsigninsystemandroid.ui.settings.SettingsActivity
 
+/**
+ * 显示用户信息的Fragment。
+ */
 class UserFragment : Fragment() {
 
     private lateinit var systemApplication: SystemApplication

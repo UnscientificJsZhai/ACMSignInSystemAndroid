@@ -29,13 +29,13 @@ import androidx.room.PrimaryKey
 )
 data class TrainingRecord(
     val sessionHash: Int,
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Long,
     val userName: String,
     val startTime: String,
     val endTime: String,
     @IntRange(from = 0, to = 3) val status: Int,
     val timeLength: String
-) : Comparable<TrainingRecord> {
+) {
 
     companion object {
 
@@ -61,6 +61,4 @@ data class TrainingRecord(
          */
         const val STATUS_RECORDED = 3
     }
-
-    override fun compareTo(other: TrainingRecord) = this.id - other.id
 }

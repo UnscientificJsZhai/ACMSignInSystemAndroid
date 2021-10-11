@@ -17,6 +17,11 @@ import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
 import java.io.IOException
 
+/**
+ * MainActivity的ViewModel。
+ *
+ * @see MainActivity
+ */
 class MainActivityViewModel(
     var currentUser: LiveData<CurrentUser>,
     var trainingRecords: LiveData<List<TrainingRecord>>
@@ -28,7 +33,7 @@ class MainActivityViewModel(
     }
 
     /**
-     * 对当前登录用户请求的结果。
+     * 封装对当前登录用户请求的结果。
      */
     sealed class GetUserResult {
 
@@ -41,6 +46,12 @@ class MainActivityViewModel(
      */
     private val httpClient = OkHttpClient()
 
+    /**
+     * 初始化此ViewModel的工厂。
+     *
+     * @param dao 操作数据库使用的dao对象。
+     * @param sessionHash 当前登录用户的Session的HashCode。
+     */
     class Factory(private val dao: UserDao, private val sessionHash: Int) :
         ViewModelProvider.Factory {
 
@@ -143,7 +154,7 @@ class MainActivityViewModel(
                 list.add(
                     TrainingRecord(
                         sessionHash = session.hashCode(),
-                        id = item.getInt("id"),
+                        id = item.getLong("id"),
                         userName = item.getString("username"),
                         startTime = item.getString("startTime"),
                         endTime = if (statusCode == 0) {
@@ -170,7 +181,7 @@ class MainActivityViewModel(
      * @param id 要重新获取的记录的ID。
      * @return 特定的训练记录。
      */
-    suspend fun getSpecificTrainingHistory(session: String, id: Int): TrainingRecord? {
+    suspend fun getSpecificTrainingHistory(session: String, id: Long): TrainingRecord? {
         val jsonString = withContext(Dispatchers.IO) {
             try {
                 this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(session, id)
@@ -201,7 +212,7 @@ class MainActivityViewModel(
         return try {
             TrainingRecord(
                 sessionHash = session.hashCode(),
-                id = item.getInt("id"),
+                id = item.getLong("id"),
                 userName = item.getString("username"),
                 startTime = item.getString("startTime"),
                 endTime = if (statusCode == 0) {

@@ -1,6 +1,5 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main.fragments.user
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -12,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +20,12 @@ import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard.mainTextColor
 
+/**
+ * 用户信息页。
+ *
+ * @param data 用户数据。
+ * @param onLogout 按下退出按键时的操作。
+ */
 @Composable
 fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
     ConstraintLayout(
@@ -49,27 +54,27 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = "邮箱: ${data.email}",
+                text = stringResource(R.string.userInformation_email) + data.email,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "部门: ${data.department}",
+                text = stringResource(R.string.userInformation_department) + data.department,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "专业: ${data.major}",
+                text = stringResource(R.string.userInformation_major) + data.major,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "加入时间: ${data.joinTime}",
+                text = stringResource(R.string.userInformation_joinTime) + data.joinTime,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "总训练时间: ${data.allTrainingTime}",
+                text = stringResource(R.string.userInformation_allTrainingTime) + data.allTrainingTime,
                 color = Color.Gray
             )
         }
@@ -86,12 +91,18 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
                         end.linkTo(parent.end)
                     }
             ) {
-                Text(text = "登出")
+                Text(text = stringResource(R.string.settings_logout))
             }
         }
     }
 }
 
+/**
+ * 显示用户信息的页面。可以滚动。
+ *
+ * @param data 用户数据。
+ * @param onLogout 按下退出按键时的操作。
+ */
 @Composable
 fun UserPage(data: CurrentUser, onLogout: () -> Unit) {
     LazyColumn {

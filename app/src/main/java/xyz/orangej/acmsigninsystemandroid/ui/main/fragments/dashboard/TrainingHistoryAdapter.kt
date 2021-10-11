@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 
+/**
+ * 显示训练记录的RecyclerView的适配器。
+ */
 class TrainingHistoryAdapter :
     ListAdapter<TrainingRecord, TrainingHistoryAdapter.ViewHolder>(DifferenceCallback) {
 

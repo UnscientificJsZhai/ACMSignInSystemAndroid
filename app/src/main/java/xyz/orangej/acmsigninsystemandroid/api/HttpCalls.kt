@@ -120,7 +120,7 @@ fun OkHttpClient.callGetTrainingHistory(session: String, id: Int): String? {
  * @param id 要请求的训练记录ID。
  * @return 响应结果的json字符串。
  */
-fun OkHttpClient.callGetSpecificTrainingHistory(session: String, id: Int): String? {
+fun OkHttpClient.callGetSpecificTrainingHistory(session: String, id: Long): String? {
     val requestBody = RequestBody.create(
         mediaType,
         "id=$id"

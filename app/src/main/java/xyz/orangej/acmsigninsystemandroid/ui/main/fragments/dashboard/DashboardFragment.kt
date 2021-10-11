@@ -17,7 +17,9 @@ import xyz.orangej.acmsigninsystemandroid.databinding.FragmentDashboardBinding
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel
 import kotlin.math.min
 
-
+/**
+ * 显示训练记录的Fragment。
+ */
 class DashboardFragment : Fragment() {
 
     companion object {
