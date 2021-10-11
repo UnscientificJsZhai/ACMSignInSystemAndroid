@@ -11,7 +11,7 @@ class LoginTest {
     @Test
     fun loginTest() {
         val client = OkHttpClient()
-        val jsonString = client.callLogin("UserActivity", "UserActivity")
+        val jsonString = client.callLogin("UserFragment", "UserFragment")
         println(jsonString)
         assert(true)
     }

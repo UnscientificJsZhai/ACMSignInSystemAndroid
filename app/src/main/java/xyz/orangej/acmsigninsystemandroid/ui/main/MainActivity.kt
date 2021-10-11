@@ -18,6 +18,8 @@ import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityMainBinding
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
+import java.net.SocketException
+import javax.net.ssl.SSLHandshakeException
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,15 +56,21 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         viewModel.viewModelScope.launch {
-            val user = viewModel.getCurrentUser(systemApplication.session)
-            if (user == null) {
-                Toast.makeText(this@MainActivity, "登录过期", Toast.LENGTH_SHORT).show()
-                systemApplication.session = ""
-                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                finish()
-            } else {
+            val result = viewModel.getCurrentUser(systemApplication.session)
+
+            if (result is MainActivityViewModel.GetUserResult.Error) {
+                if (result.exception is SocketException || result.exception is SSLHandshakeException) {
+                    Toast.makeText(this@MainActivity, "网络异常", Toast.LENGTH_SHORT).show()
+                    return@launch
+                } else if (result.exception is AssertionError) {
+                    Toast.makeText(this@MainActivity, "登录过期", Toast.LENGTH_SHORT).show()
+                    systemApplication.session = ""
+                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                    finish()
+                }
+            } else if (result is MainActivityViewModel.GetUserResult.Success) {
                 withContext(Dispatchers.IO) {
-                    dao.addCurrentUser(user)
+                    dao.addCurrentUser(result.data)
                 }
             }
         }

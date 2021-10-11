@@ -70,13 +70,14 @@ class LoginActivity : AppCompatActivity() {
             loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
+                login.isEnabled = true
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                setResult(Activity.RESULT_OK)
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
-            setResult(Activity.RESULT_OK)
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
         })
 
         username.afterTextChanged {
@@ -103,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
+                login.isEnabled = false
                 loginViewModel.viewModelScope.launch {
                     loading.visibility = View.VISIBLE
                     systemApplication.session = //登录成功即保存Session

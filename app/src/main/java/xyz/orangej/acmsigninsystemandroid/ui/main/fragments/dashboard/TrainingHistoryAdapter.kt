@@ -20,6 +20,9 @@ class TrainingHistoryAdapter :
         }
     }
 
+    /**
+     * 判断数据对象是否相同的相关工具对象。
+     */
     object DifferenceCallback : DiffUtil.ItemCallback<TrainingRecord>() {
 
         override fun areItemsTheSame(oldItem: TrainingRecord, newItem: TrainingRecord): Boolean {

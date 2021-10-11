@@ -15,6 +15,7 @@ import xyz.orangej.acmsigninsystemandroid.api.callGetUserInfo
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
+import java.io.IOException
 
 class MainActivityViewModel(
     var currentUser: LiveData<CurrentUser>,
@@ -24,6 +25,15 @@ class MainActivityViewModel(
     companion object {
 
         const val TAG = "MainActivityViewModel"
+    }
+
+    /**
+     * 对当前登录用户请求的结果。
+     */
+    sealed class GetUserResult {
+
+        class Success(val data: CurrentUser) : GetUserResult()
+        class Error(val exception: Throwable) : GetUserResult()
     }
 
     /**
@@ -44,42 +54,48 @@ class MainActivityViewModel(
     }
 
     /**
-     * 获取挡墙用户信息。如果返回null则为登录失效。
+     * 获取当前用户信息。如果返回null则为登录失效。
      *
      * @param session
      */
-    suspend fun getCurrentUser(session: String): CurrentUser? {
-        val jsonString = withContext(Dispatchers.IO) {
-            this@MainActivityViewModel.httpClient.callGetUserInfo(session)
-        } ?: return null
+    suspend fun getCurrentUser(session: String): GetUserResult {
+        val jsonString = try {
+            withContext(Dispatchers.IO) {
+                this@MainActivityViewModel.httpClient.callGetUserInfo(session)
+            } ?: return GetUserResult.Error(RuntimeException("空返回结果"))
+        } catch (e: Exception) {
+            return GetUserResult.Error(e)
+        }
         val jsonObject = try {
             JSONObject(jsonString).also {
                 assert(it.getString("status") == "success")
             }
         } catch (e: JSONException) {
             Log.e(TAG, "getTrainHistory: $e")
-            return null
+            return GetUserResult.Error(e)
         } catch (e: AssertionError) {
             Log.e(TAG, "getTrainHistory: $e")
-            return null
+            return GetUserResult.Error(e)
         }
-        Log.e(TAG, jsonString, )
+        Log.e(TAG, jsonString)
 
         return try {
             val item = jsonObject.getJSONObject("data")
-            CurrentUser(
-                sessionHash = session.hashCode(),
-                userName = item.getString("username"),
-                displayName = item.getString("name"),
-                email = item.getString("email"),
-                department = item.getString("department"),
-                major = item.getString("major"),
-                joinTime = item.getString("joinTime"),
-                allTrainingTime = item.getString("allTrainningTime")
+            GetUserResult.Success(
+                CurrentUser(
+                    sessionHash = session.hashCode(),
+                    userName = item.getString("username"),
+                    displayName = item.getString("name"),
+                    email = item.getString("email"),
+                    department = item.getString("department"),
+                    major = item.getString("major"),
+                    joinTime = item.getString("joinTime"),
+                    allTrainingTime = item.getString("allTrainningTime")
+                )
             )
         } catch (e: JSONException) {
-            Log.e(TAG, "getCurrentUser: $e", )
-            return null
+            Log.e(TAG, "getCurrentUser: $e")
+            GetUserResult.Error(e)
         }
     }
 
@@ -91,9 +107,14 @@ class MainActivityViewModel(
      * @return 新增的训练记录列表。
      */
     suspend fun getTrainHistory(session: String, startAt: Int = 0): List<TrainingRecord> {
-        val jsonString = withContext(Dispatchers.IO) {
-            this@MainActivityViewModel.httpClient.callGetTrainingHistory(session, startAt)
-        } ?: return emptyList()
+        val jsonString =
+            withContext(Dispatchers.IO) {
+                try {
+                    this@MainActivityViewModel.httpClient.callGetTrainingHistory(session, startAt)
+                } catch (e: java.lang.Exception) {
+                    null
+                }
+            } ?: return emptyList()
         Log.e(TAG, "getTrainHistory: $jsonString")
         val jsonObject = try {
             JSONObject(jsonString).also {
@@ -151,7 +172,11 @@ class MainActivityViewModel(
      */
     suspend fun getSpecificTrainingHistory(session: String, id: Int): TrainingRecord? {
         val jsonString = withContext(Dispatchers.IO) {
-            this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(session, id)
+            try {
+                this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(session, id)
+            } catch (e: IOException) {
+                null
+            }
         } ?: return null
         Log.e(TAG, "getTrainHistory: $jsonString")
         val jsonObject = try {

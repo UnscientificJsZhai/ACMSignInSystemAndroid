@@ -72,7 +72,7 @@ class DashboardFragment : Fragment() {
                 taskList.add(async(Dispatchers.IO) {
                     val invalidRecords = dao.getUnrecordedRecords()
                     Log.e("size", invalidRecords.size.toString())
-                    for (index in 0 until min(5, invalidRecords.size)) {
+                    for (index in 0 until min(MAX_REFRESH_NUMBER, invalidRecords.size)) {
                         val oldRecord = invalidRecords[index]
                         val newRecord = viewModel.getSpecificTrainingHistory(
                             systemApplication.session,
