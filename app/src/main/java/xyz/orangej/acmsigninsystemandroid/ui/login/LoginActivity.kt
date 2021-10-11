@@ -13,8 +13,11 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityLoginBinding
@@ -73,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                 login.isEnabled = true
             }
             if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+                showLoginToast(loginResult.success)
                 setResult(Activity.RESULT_OK)
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
@@ -112,14 +115,21 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            val dao = systemApplication.getDatabase().userDao()
+            withContext(Dispatchers.IO) {
+                dao.deleteUserCache()
+            }
+        }
     }
 
     /**
-     * 更新主页的界面显示。
+     * 显示登录成功。
      *
      * @param model 登录成功的用户。
      */
-    private fun updateUiWithUser(model: LoginResult.LoggedInUserView) {
+    private fun showLoginToast(model: LoginResult.LoggedInUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         Toast.makeText(

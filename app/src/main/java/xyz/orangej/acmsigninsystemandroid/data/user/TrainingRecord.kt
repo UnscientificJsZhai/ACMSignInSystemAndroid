@@ -2,6 +2,8 @@ package xyz.orangej.acmsigninsystemandroid.data.user
 
 import androidx.annotation.IntRange
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -15,7 +17,16 @@ import androidx.room.PrimaryKey
  * @param status 训练记录状态。
  * @param timeLength 训练时间长度。
  */
-@Entity(tableName = TrainingRecord.TABLE_NAME)
+@Entity(
+    tableName = TrainingRecord.TABLE_NAME,
+    foreignKeys = [ForeignKey(
+        entity = CurrentUser::class,
+        parentColumns = ["sessionHash"],
+        childColumns = ["sessionHash"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index(value = ["sessionHash"])]
+)
 data class TrainingRecord(
     val sessionHash: Int,
     @PrimaryKey val id: Int,

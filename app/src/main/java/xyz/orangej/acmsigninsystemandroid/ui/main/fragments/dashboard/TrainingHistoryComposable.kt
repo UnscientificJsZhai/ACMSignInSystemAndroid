@@ -2,6 +2,7 @@ package xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -15,6 +16,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
+
+/**
+ * 强调文字的颜色。根据系统深色模式配置更改。
+ *
+ * @return 用于Compose的Color。
+ */
+@Composable
+fun mainTextColor() = if (isSystemInDarkTheme()) {
+    Color.White
+} else {
+    Color.Black
+}
 
 /**
  * 显示单个训练记录的卡片。
@@ -37,7 +50,12 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                 }
                 .padding(12.dp),
             elevation = 4.dp,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            backgroundColor = if (isSystemInDarkTheme()) {
+                Color.DarkGray
+            } else {
+                Color.White
+            }
         ) {
             ConstraintLayout {
                 val (id, status, trainingHistoryTitle, record, startTime, endTime) = createRefs()
@@ -75,7 +93,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                     TrainingRecord.STATUS_RECORDED -> Text(
                         text = "已记录",
                         modifier = statusModifier,
-                        color = Color.Black
+                        color = mainTextColor()
                     )
                 }
 
@@ -98,7 +116,8 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                             bottom.linkTo(parent.bottom, 12.dp)
                         }
                     },
-                    fontSize = 26.sp
+                    fontSize = 26.sp,
+                    color = mainTextColor()
                 )
 
                 if (expanded) {
