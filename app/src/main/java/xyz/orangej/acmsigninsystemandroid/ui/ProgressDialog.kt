@@ -10,6 +10,7 @@ import xyz.orangej.acmsigninsystemandroid.R
 
 /**
  * 自定义ProgressDialog。
+ * 拷贝自项目[TimeManager](http://www.github.com/UnscientificJsZhai/TimeManager) v1.2.7。
  *
  * @param context 显示Dialog的Activity。
  */

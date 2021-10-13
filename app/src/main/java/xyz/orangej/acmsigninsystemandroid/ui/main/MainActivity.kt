@@ -16,10 +16,15 @@ import com.huawei.hms.ml.scan.HmsScan
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONException
+import org.json.JSONObject
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityMainBinding
+import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.ErrorCode.*
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.SuccessType.*
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home.HomeFragment
 import java.net.SocketException
 import javax.net.ssl.SSLHandshakeException
@@ -48,8 +53,6 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
@@ -79,14 +82,95 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("deprecation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == HomeFragment.REQUEST_CODE_SCAN_ONE) {
             if (resultCode == RESULT_OK) {
                 val obj = data?.getParcelableExtra(ScanUtil.RESULT) as HmsScan?
-                Toast.makeText(this, obj?.originalValue, Toast.LENGTH_SHORT).show()
+                processSignIn(obj)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    /**
+     * 处理登录的逻辑。
+     *
+     * @param data HMS扫码取得的数。
+     */
+    private fun processSignIn(data: HmsScan?) {
+        val signInData = qrCodeToSignInInfo(data?.originalValue ?: "")
+        if (signInData == null) {
+            Toast.makeText(this, R.string.home_invalidQRCode, Toast.LENGTH_SHORT).show()
+        } else {
+            viewModel.viewModelScope.launch {
+                val dialog = ProgressDialog(this@MainActivity)
+                dialog.show()
+                val response = viewModel.signIn(
+                    csrfToken = signInData.csrfToken,
+                    token = signInData.token,
+                    time = signInData.time,
+                    session = systemApplication.session
+                )
+                when (response) {
+                    is MainActivityViewModel.SignInResult.Error -> {
+                        val errorMessage = when (response.errorCode) {
+                            NETWORK_ERROR -> getString(R.string.signIn_error_network)
+                            ILLEGAL_DATA -> getString(R.string.signIn_error_illegal)
+                            FAIL_TO_SIGN_IN -> getString(R.string.signIn_error_fail)
+                        }
+                        Toast.makeText(
+                            this@MainActivity,
+                            "${getString(R.string.signIn_error)} $errorMessage",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    is MainActivityViewModel.SignInResult.Success -> {
+                        Toast.makeText(
+                            this@MainActivity,
+                            when (response.message) {
+                                START -> getString(R.string.signIn_success_1)
+                                END -> getString(R.string.signIn_success_2)
+                            },
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                dialog.postDismiss()
+            }
+        }
+    }
+
+    /**
+     * 签到信息数据类。
+     */
+    private data class SignInData(
+        val csrfToken: String,
+        val token: String,
+        val time: String
+    )
+
+    /**
+     * 将二维码转换为签到信息。
+     *
+     * @param originalValue 从二维码中获取的信息。
+     * @return 生成的签到信息的数据类。
+     */
+    private fun qrCodeToSignInInfo(originalValue: String): SignInData? {
+        val jsonObject = try {
+            JSONObject(originalValue)
+        } catch (e: JSONException) {
+            return null
+        }
+        return try {
+            SignInData(
+                csrfToken = jsonObject.getString("csrf_token"),
+                token = jsonObject.getString("token"),
+                time = jsonObject.getString("time")
+            )
+        } catch (e: JSONException) {
+            null
         }
     }
 }

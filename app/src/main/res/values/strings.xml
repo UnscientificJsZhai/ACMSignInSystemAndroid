@@ -13,9 +13,17 @@
     <string name="title_home">首页</string>
     <string name="title_dashboard">训练记录</string>
     <string name="title_notifications">用户信息</string>
+    <string name="sign_up"><u>注册</u></string>
     <string name="dialog_ProgressDialog_Message">加载中</string>
 
     <string name="home_scanButton">扫码签到</string>
+    <string name="home_invalidQRCode">无效的二维码</string>
+    <string name="signIn_error">签到失败</string>
+    <string name="signIn_error_network">网络异常</string>
+    <string name="signIn_error_illegal">不合法的数据</string>
+    <string name="signIn_error_fail">其他错误</string>
+    <string name="signIn_success_1">签到成功</string>
+    <string name="signIn_success_2">签退成功</string>
 
     <string name="trainingRecord_id">训练记录:</string>
     <string name="trainingRecord_status_0">未完成</string>

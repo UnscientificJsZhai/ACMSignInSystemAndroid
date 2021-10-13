@@ -3,11 +3,17 @@ package xyz.orangej.acmsigninsystemandroid.ui.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.api.SERVER_ADDRESS
+import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 
 /**
@@ -25,6 +31,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private lateinit var systemApplication: SystemApplication
+
+    private val viewModel by viewModels<SettingsActivityViewModel>()
 
     private var jumpToWebPreference: Preference? = null
     private var refreshPreference: Preference? = null
@@ -45,7 +53,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         refreshPreference = findPreference(REFRESH_KEY)
         refreshPreference?.setOnPreferenceClickListener {
-            //TODO 完全刷新训练记录
+            viewModel.viewModelScope.launch {
+                val dialog = ProgressDialog(requireActivity())
+                dialog.show()
+                val list = viewModel.getTrainHistory(systemApplication.session)
+                withContext(Dispatchers.IO) {
+                    if (list.isNotEmpty()) {
+                        val dao = systemApplication.getDatabase().userDao()
+                        dao.deleteAllRecords()
+                        for (item in list) {
+                            dao.addRecord(item)
+                        }
+                    }
+                    dialog.postDismiss()
+                }
+            }
             true
         }
 

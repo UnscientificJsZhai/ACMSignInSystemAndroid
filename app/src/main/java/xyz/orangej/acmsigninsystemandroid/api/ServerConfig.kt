@@ -48,3 +48,5 @@ fun trainingHistoryURL() = "$SERVER_ADDRESS/api/getrecord/"
  * @return 字符串格式的URL。
  */
 fun specificTrainingHistoryURL() = "$SERVER_ADDRESS/api/getspecificrecord/"
+
+fun signInURL() = "$SERVER_ADDRESS/api/signin"

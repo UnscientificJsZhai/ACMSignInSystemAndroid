@@ -12,6 +12,7 @@ import org.json.JSONObject
 import xyz.orangej.acmsigninsystemandroid.api.callGetSpecificTrainingHistory
 import xyz.orangej.acmsigninsystemandroid.api.callGetTrainingHistory
 import xyz.orangej.acmsigninsystemandroid.api.callGetUserInfo
+import xyz.orangej.acmsigninsystemandroid.api.callSignIn
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
@@ -225,6 +226,67 @@ class MainActivityViewModel(
             )
         } catch (e: JSONException) {
             null
+        }
+    }
+
+    /**
+     * 登录结果的返回信息。
+     */
+    sealed class SignInResult {
+
+        data class Success(val message: SuccessType) : SignInResult()
+        data class Error(val errorCode: ErrorCode) : SignInResult()
+
+        enum class SuccessType {
+            START, END
+        }
+
+        enum class ErrorCode {
+            NETWORK_ERROR, ILLEGAL_DATA, FAIL_TO_SIGN_IN
+        }
+    }
+
+    /**
+     * 登录。
+     *
+     * @param csrfToken
+     * @param token
+     * @param time
+     * @return
+     */
+    suspend fun signIn(
+        session: String,
+        csrfToken: String,
+        token: String,
+        time: String
+    ): SignInResult {
+        val response = withContext(Dispatchers.IO) {
+            try {
+                this@MainActivityViewModel.httpClient.callSignIn(session, csrfToken, token, time)
+            } catch (e: IOException) {
+                ""
+            }
+        }
+        if (response == null || response == "") {
+            return SignInResult.Error(SignInResult.ErrorCode.NETWORK_ERROR)
+        } else {
+            val json = try {
+                JSONObject(response)
+            } catch (e: JSONException) {
+                return SignInResult.Error(SignInResult.ErrorCode.ILLEGAL_DATA)
+            }
+            try {
+                assert("success" == json.getString("status"))
+                when (json.getString("msg")) {
+                    "签到成功" -> return SignInResult.Success(SignInResult.SuccessType.START)
+                    "签退成功" -> return SignInResult.Success(SignInResult.SuccessType.END)
+                }
+                return SignInResult.Error(SignInResult.ErrorCode.ILLEGAL_DATA)
+            } catch (e: JSONException) {
+                return SignInResult.Error(SignInResult.ErrorCode.ILLEGAL_DATA)
+            } catch (e: AssertionError) {
+                return SignInResult.Error(SignInResult.ErrorCode.FAIL_TO_SIGN_IN)
+            }
         }
     }
 }

@@ -105,4 +105,30 @@ abstract class UserDao {
      */
     @Update
     abstract fun updateRecord(record: TrainingRecord)
+
+    /**
+     * 删除一个训练记录。
+     *
+     * @param record 要删除的训练记录。
+     */
+    @Delete
+    protected abstract fun deleteRecord(record: TrainingRecord)
+
+    /**
+     * 获得所有训练记录。
+     *
+     * @return 训练记录列表。
+     */
+    @Query("SELECT * FROM ${TrainingRecord.TABLE_NAME}")
+    protected abstract fun getAllRecord(): List<TrainingRecord>
+
+    /**
+     * 删除所有已经保存的训练记录。
+     */
+    fun deleteAllRecords() {
+        val records = getAllRecord()
+        for (record in records) {
+            deleteRecord(record)
+        }
+    }
 }

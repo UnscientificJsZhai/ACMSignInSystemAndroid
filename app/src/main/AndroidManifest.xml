@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ACMSignInSystemAndroid">
         <activity
+            android:name=".ui.login.SignUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.settings.InfoActivity"
             android:exported="true" />
         <activity

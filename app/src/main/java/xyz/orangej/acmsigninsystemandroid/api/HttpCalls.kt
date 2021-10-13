@@ -150,5 +150,17 @@ fun OkHttpClient.callSignIn(
     token: String,
     time: String
 ): String? {
-    TODO()
+    val requestBody = RequestBody.create(
+        mediaType,
+        "csrf_token=$csrfToken&token=$token&time=$time"
+    )
+    val request = Request.Builder()
+        .url(signInURL())
+        .addSession(session)
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
 }
