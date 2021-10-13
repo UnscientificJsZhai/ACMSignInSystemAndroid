@@ -11,6 +11,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.huawei.hms.hmsscankit.ScanUtil
+import com.huawei.hms.ml.scan.HmsScan
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,6 +20,7 @@ import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityMainBinding
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
+import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home.HomeFragment
 import java.net.SocketException
 import javax.net.ssl.SSLHandshakeException
 
@@ -73,6 +76,17 @@ class MainActivity : AppCompatActivity() {
                     dao.addCurrentUser(result.data)
                 }
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == HomeFragment.REQUEST_CODE_SCAN_ONE) {
+            if (resultCode == RESULT_OK) {
+                val obj = data?.getParcelableExtra(ScanUtil.RESULT) as HmsScan?
+                Toast.makeText(this, obj?.originalValue, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

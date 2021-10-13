@@ -1,36 +1,66 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import xyz.orangej.acmsigninsystemandroid.databinding.FragmentHomeBinding
+import com.huawei.hms.hmsscankit.ScanUtil
+import com.huawei.hms.ml.scan.HmsScan
+import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivity
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    companion object {
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+        const val REQUEST_CODE_SCAN_ONE = 12
+    }
+
+    private lateinit var permissionRequestCallback: ActivityResultLauncher<Array<out String>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.permissionRequestCallback =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                if (!it.values.contains(false)) {
+                    startScanActivity()
+                }
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        return root
+    ) = ComposeView(requireContext()).apply {
+        setContent {
+            HomePage(::onScanButtonClick)
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    /**
+     * 当按下扫码按钮时触发的回调函数。
+     */
+    private fun onScanButtonClick() {
+        val permissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+        )
+        permissionRequestCallback.launch(permissions)
+    }
+
+    /**
+     * 启动扫码Activity。只有当权限全部获取后才调用此方法。
+     *
+     * @see MainActivity.onActivityResult
+     */
+    private fun startScanActivity() {
+        val options = HmsScanAnalyzerOptions.Creator()
+            .setHmsScanTypes(HmsScan.QRCODE_SCAN_TYPE, HmsScan.DATAMATRIX_SCAN_TYPE).create()
+        ScanUtil.startScan(requireActivity(), REQUEST_CODE_SCAN_ONE, options)
     }
 }

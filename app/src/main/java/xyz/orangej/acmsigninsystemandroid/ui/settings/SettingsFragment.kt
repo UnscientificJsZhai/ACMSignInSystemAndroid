@@ -22,8 +22,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val REFRESH_KEY = "refresh"
 
         const val LOGOUT_KEY = "logout"
-
-        const val INFO_KEY = "info"
     }
 
     private lateinit var systemApplication: SystemApplication
@@ -47,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         refreshPreference = findPreference(REFRESH_KEY)
         refreshPreference?.setOnPreferenceClickListener {
-
+            //TODO 完全刷新训练记录
             true
         }
 

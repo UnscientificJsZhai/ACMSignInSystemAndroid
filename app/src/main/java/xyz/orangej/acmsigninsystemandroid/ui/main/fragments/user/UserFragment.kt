@@ -24,7 +24,7 @@ class UserFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        this.systemApplication = requireContext().applicationContext as SystemApplication
         setHasOptionsMenu(true)
     }
 
@@ -34,8 +34,6 @@ class UserFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        this@UserFragment.systemApplication =
-            requireContext().applicationContext as SystemApplication
 
         viewModel.currentUser.observe(viewLifecycleOwner) {
             if (it == null) {

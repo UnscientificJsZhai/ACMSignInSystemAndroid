@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -50,6 +51,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                 .clickable {
                     expanded = !expanded
                 }
+                .animateContentSize()
                 .padding(12.dp),
             elevation = 4.dp,
             shape = RoundedCornerShape(12.dp),
