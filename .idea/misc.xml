@@ -21,9 +21,24 @@
         <entry key="../../../../../layout/compose-model-1634047917372.xml" value="0.22466216216216217" />
         <entry key="../../../../../layout/compose-model-1634049274167.xml" value="0.33" />
         <entry key="../../../../../layout/compose-model-1634050462785.xml" value="0.22466216216216217" />
+        <entry key="../../../../../layout/compose-model-1634193341154.xml" value="0.32559121621621623" />
+        <entry key="../../../../../layout/compose-model-1634193632662.xml" value="0.21579391891891891" />
+        <entry key="../../../../../layout/compose-model-1634194240299.xml" value="0.5" />
+        <entry key="../../../../../layout/compose-model-1634194874268.xml" value="0.21579391891891891" />
+        <entry key="../../../../../layout/compose-model-1634196406144.xml" value="1.0" />
+        <entry key="../../../../../layout/compose-model-1634201002121.xml" value="0.21579391891891891" />
+        <entry key="../../../../../layout/compose-model-1634201604846.xml" value="0.21663851351351351" />
+        <entry key="../../../../../layout/compose-model-1634202683220.xml" value="0.21663851351351351" />
+        <entry key="../../../../../layout/compose-model-1634203873702.xml" value="0.21663851351351351" />
+        <entry key="../../../../../layout/compose-model-1634373972896.xml" value="0.263347022587269" />
+        <entry key="../../../../../layout/compose-model-1634397353800.xml" value="0.32559121621621623" />
+        <entry key="../../../../../layout/compose-model-1634397748494.xml" value="0.1809880590025755" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2162280701754386" />
         <entry key="app/src/main/res/drawable/baseline_person_24.xml" value="0.33026315789473687" />
         <entry key="app/src/main/res/drawable/baseline_settings_24.xml" value="0.33026315789473687" />
         <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.33026315789473687" />
+        <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2162280701754386" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2162280701754386" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.33026315789473687" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.24163319946452477" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.2612704918032787" />
@@ -37,6 +52,7 @@
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.17617753623188406" />
         <entry key="app/src/main/res/layout/widget_trainning_history_item.xml" value="0.33" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.19739583333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2162280701754386" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.25" />
       </map>
     </option>

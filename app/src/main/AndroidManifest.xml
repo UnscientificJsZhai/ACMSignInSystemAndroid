@@ -16,11 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ACMSignInSystemAndroid">
         <activity
-            android:name=".ui.login.SignUpActivity"
-            android:exported="false" />
+            android:name=".ui.login.sign.SignUpActivity"
+            android:exported="false"
+            android:label="@string/sign_up_noLine"
+            android:parentActivityName=".ui.login.sign.SignUpActivity" />
         <activity
             android:name=".ui.settings.InfoActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/settings_info"
+            android:parentActivityName=".ui.settings.SettingsActivity" />
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:exported="true"

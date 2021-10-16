@@ -12,6 +12,43 @@ import xyz.orangej.acmsigninsystemandroid.data.login.Result
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
+    companion object {
+
+        /**
+         * 检查用户名是否合法。
+         *
+         * @param username 用户名。
+         * @return 合法性。
+         */
+        @JvmStatic
+        fun isUserNameValid(username: String) = username.length in 4..16
+
+        /**
+         * 检查密码是否合法。
+         *
+         * @param password 密码。
+         * @return 合法性。
+         */
+        @JvmStatic
+        fun isPasswordValid(password: String): Boolean {
+            if (BuildConfig.BUILD_TYPE == "debug") return true
+            return if (password.length in 8..16) {
+                var hasDigit = false
+                var hasLetter = false
+                for (char in password) {
+                    if (char.isDigit()) {
+                        hasDigit = true
+                    } else if (char.isLetter()) {
+                        hasLetter = true
+                    }
+                }
+                hasDigit && hasLetter
+            } else {
+                false
+            }
+        }
+    }
+
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
@@ -51,38 +88,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
-        }
-    }
-
-    /**
-     * 检查用户名是否合法。
-     *
-     * @param username 用户名。
-     * @return 合法性。
-     */
-    private fun isUserNameValid(username: String) = username.length in 4..16
-
-    /**
-     * 检查密码是否合法。
-     *
-     * @param password 密码。
-     * @return 合法性。
-     */
-    private fun isPasswordValid(password: String): Boolean {
-        if (BuildConfig.BUILD_TYPE == "debug") return true
-        return if (password.length in 8..16) {
-            var hasDigit = false
-            var hasLetter = false
-            for (char in password) {
-                if (char.isDigit()) {
-                    hasDigit = true
-                } else if (char.isLetter()) {
-                    hasLetter = true
-                }
-            }
-            hasDigit && hasLetter
-        } else {
-            false
         }
     }
 }

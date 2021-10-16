@@ -21,6 +21,7 @@ import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityLoginBinding
+import xyz.orangej.acmsigninsystemandroid.ui.login.sign.SignUpActivity
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {

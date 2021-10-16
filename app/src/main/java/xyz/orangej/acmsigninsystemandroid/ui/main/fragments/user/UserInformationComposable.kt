@@ -40,6 +40,7 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
             fontSize = 36.sp,
             modifier = Modifier.constrainAs(userName) {
                 end.linkTo(parent.end, 16.dp)
+                top.linkTo(parent.top, 8.dp)
             },
             color = mainTextColor()
         )
@@ -47,34 +48,34 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
         Column(
             modifier = Modifier
                 .constrainAs(informationBox) {
-                    top.linkTo(userName.bottom, 12.dp)
+                    top.linkTo(userName.bottom, 16.dp)
                 }
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = stringResource(R.string.userInformation_email) + data.email,
+                text = stringResource(R.string.userInformation_email) + " " + data.email,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.userInformation_department) + data.department,
+                text = stringResource(R.string.userInformation_department) + " " + data.department,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.userInformation_major) + data.major,
+                text = stringResource(R.string.userInformation_major) + " " + data.major,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.userInformation_joinTime) + data.joinTime,
+                text = stringResource(R.string.userInformation_joinTime) + " " + data.joinTime,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.userInformation_allTrainingTime) + data.allTrainingTime,
+                text = stringResource(R.string.userInformation_allTrainingTime) + " " + data.allTrainingTime,
                 color = Color.Gray
             )
         }
@@ -86,7 +87,7 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
                     .width(120.dp)
                     .wrapContentHeight()
                     .constrainAs(logoutButton) {
-                        top.linkTo(informationBox.bottom, 32.dp)
+                        top.linkTo(informationBox.bottom, 64.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }

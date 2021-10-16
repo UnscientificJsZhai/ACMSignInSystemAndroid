@@ -14,7 +14,19 @@
     <string name="title_dashboard">训练记录</string>
     <string name="title_notifications">用户信息</string>
     <string name="sign_up"><u>注册</u></string>
+    <string name="sign_up_noLine">注册</string>
     <string name="dialog_ProgressDialog_Message">加载中</string>
+
+    <string name="sign_up_title">欢迎注册</string>
+    <string name="signUp_username">用户名</string>
+    <string name="signUp_password">密码</string>
+    <string name="signUp_passwordConfirm">确认密码</string>
+    <string name="signUp_name">真实姓名</string>
+    <string name="signUp_department">学院</string>
+    <string name="signUp_admin">管理员</string>
+    <string name="signUp_adminVerify">管理员邀请码</string>
+    <string name="signUp_email">电子邮箱</string>
+    <string name="signUp_emailVerify">验证码</string>
 
     <string name="home_scanButton">扫码签到</string>
     <string name="home_invalidQRCode">无效的二维码</string>
@@ -48,4 +60,7 @@
     <string name="settings_logout">登出</string>
     <string name="settings_other">其它</string>
     <string name="settings_info">关于</string>
+
+    <string name="info_sub">不科学的Js宅 开发</string>
+    <string name="info_box1">本应用仅用于西北工业大学ACM团队日常训练打卡签到，不得用于其他用途。</string>
 </resources>
