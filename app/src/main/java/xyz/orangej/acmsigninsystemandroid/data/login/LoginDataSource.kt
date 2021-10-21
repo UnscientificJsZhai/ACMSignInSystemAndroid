@@ -4,7 +4,6 @@ import androidx.annotation.WorkerThread
 import okhttp3.OkHttpClient
 import org.json.JSONObject
 import xyz.orangej.acmsigninsystemandroid.api.callLogin
-import xyz.orangej.acmsigninsystemandroid.api.callLogout
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
 import java.io.IOException
 
@@ -28,7 +27,9 @@ class LoginDataSource {
         try {
             val responseBody = client.callLogin(username, password)
             val responseJsonObject =
-                JSONObject(responseBody ?: return Result.Error(IOException("Empty response"))).getJSONObject("data")
+                JSONObject(
+                    responseBody ?: return Result.Error(IOException("Empty response"))
+                ).getJSONObject("data")
             val user = LoggedInUser(
                 userId = responseJsonObject.getString("sessionId"),
                 displayName = responseJsonObject.getString("username")
@@ -37,16 +38,5 @@ class LoginDataSource {
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }
-    }
-
-    /**
-     * 退出登录的实现。
-     *
-     * @param session 已经登录账号的session。
-     */
-    @WorkerThread
-    fun logout(session: String) {
-        client.callLogout(session)
-        //TODO 删除本地保存的Session
     }
 }

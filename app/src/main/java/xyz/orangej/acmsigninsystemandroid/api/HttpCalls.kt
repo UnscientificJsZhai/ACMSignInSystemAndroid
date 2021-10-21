@@ -143,6 +143,7 @@ fun OkHttpClient.callGetSpecificTrainingHistory(session: String, id: Long): Stri
  * @param csrfToken 表单中crsf_token的值。
  * @param token 表单中token的值。
  * @param time 表单中time的值。
+ * @return 响应结果的json字符串。
  */
 fun OkHttpClient.callSignIn(
     session: String,
@@ -157,6 +158,68 @@ fun OkHttpClient.callSignIn(
     val request = Request.Builder()
         .url(signInURL())
         .addSession(session)
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
+}
+
+/**
+ * 注册。
+ *
+ * @param username 用户名。
+ * @param password 密码。
+ * @param name 真实姓名。
+ * @param department 学院。
+ * @param admin 是否注册管理员。
+ * @param adminVerify 管理员邀请码。
+ * @param email 邮箱。
+ * @param emailVerify 邮箱验证码。
+ * @return 响应结果的json字符串。
+ */
+fun OkHttpClient.callSignUp(
+    username: String,
+    password: String,
+    name: String,
+    department: String,
+    admin: Boolean,
+    adminVerify: String,
+    email: String,
+    emailVerify: String
+): String? {
+    val requestBody = RequestBody.create(
+        mediaType,
+        "username=$username&password=$password&name=$name&department=$department&admin=$admin&adminVerify=$adminVerify&email=$email&emailVerify=$emailVerify"
+    )
+    val request = Request.Builder()
+        .url(registerURL())
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
+}
+
+/**
+ * 获取邮箱验证码的方法。
+ *
+ * @param username 用户名。
+ * @param email 邮箱。
+ * @return 响应结果的json字符串。
+ */
+fun OkHttpClient.callGetEmailCode(
+    username: String,
+    email: String
+): String? {
+    val requestBody = RequestBody.create(
+        mediaType,
+        "username=$username&email=$email"
+    )
+    val request = Request.Builder()
+        .url(getEmailCodeURL())
         .method("POST", requestBody)
         .build()
 

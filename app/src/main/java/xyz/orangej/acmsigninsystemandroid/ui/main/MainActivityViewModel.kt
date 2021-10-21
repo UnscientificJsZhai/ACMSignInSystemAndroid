@@ -78,6 +78,7 @@ class MainActivityViewModel(
         } catch (e: Exception) {
             return GetUserResult.Error(e)
         }
+        Log.e(TAG, "getCurrentUser: $jsonString", )
         val jsonObject = try {
             JSONObject(jsonString).also {
                 assert(it.getString("status") == "success")

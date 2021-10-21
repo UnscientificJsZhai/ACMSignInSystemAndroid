@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login.sign
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.MenuItem
@@ -26,8 +27,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import xyz.orangej.acmsigninsystemandroid.R
+import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginViewModel
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard.mainTextColor
 
@@ -49,7 +53,66 @@ class SignUpActivity : AppCompatActivity() {
      * 按下注册按钮时的响应。
      */
     private fun onSignUpButtonClick() {
-        Toast.makeText(this, viewModel.toString(), Toast.LENGTH_SHORT).show()
+        if (viewModel.isDataLegal()) {
+            viewModel.viewModelScope.launch {
+                when (viewModel.signUp()) {
+                    SignUpActivityViewModel.SignUpResult.SUCCESS -> onSuccessSignUp()
+                    SignUpActivityViewModel.SignUpResult.ERROR -> Toast.makeText(
+                        this@SignUpActivity,
+                        R.string.signUp_error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    SignUpActivityViewModel.SignUpResult.ADMIN_VERIFY_FAILED -> Toast.makeText(
+                        this@SignUpActivity,
+                        R.string.signUp_adminVerifyError,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    SignUpActivityViewModel.SignUpResult.NETWORK_ERROR -> Toast.makeText(
+                        this@SignUpActivity,
+                        R.string.signIn_error_network,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            Toast.makeText(this, "不合法", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * 注册成功时执行的方法。
+     */
+    private fun onSuccessSignUp() {
+        Toast.makeText(this, R.string.signUp_success, Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
+    /**
+     * 按下发送验证码按钮时的响应。
+     */
+    private fun onSendEmailVerifyCodeButtonClick() {
+        if (LoginViewModel.isUserNameValid(viewModel.userName.value ?: "")) {
+            if (Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: "").matches()) {
+                viewModel.viewModelScope.launch {
+                    if (viewModel.getEmailVerifyCode()) {
+                        viewModel.setTime()
+                    } else {
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            R.string.signUp_emailVerifyCodeError,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                return
+            }
+        }
+        Toast.makeText(
+            this,
+            R.string.signUp_emailNotLegal,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -285,16 +348,24 @@ class SignUpActivity : AppCompatActivity() {
                         )
                     )
 
+                    val resendTimeout by viewModel.resendTimeout.observeAsState(0)
                     Button(
                         onClick = {
-                            Toast.makeText(this@SignUpActivity, "发送", Toast.LENGTH_SHORT).show()
+                            onSendEmailVerifyCodeButtonClick()
+                            viewModel.setTime()
                         }, modifier = Modifier.constrainAs(button) {
                             end.linkTo(parent.end)
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
-                        }
+                        }, enabled = resendTimeout == 0
                     ) {
-                        Text(text = "发送验证码", maxLines = 1, modifier = Modifier.wrapContentWidth())
+                        Text(
+                            text = if (resendTimeout == 0) {
+                                stringResource(R.string.signUp_resend)
+                            } else {
+                                stringResource(R.string.signUp_resendTimeout).format(resendTimeout)
+                            }, maxLines = 1, modifier = Modifier.wrapContentWidth()
+                        )
                     }
                 }
 

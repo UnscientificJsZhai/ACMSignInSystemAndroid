@@ -24,12 +24,6 @@ class LoginRepository(private val dataSource: LoginDataSource) {
     }
 
     @WorkerThread
-    fun logout(session: String) {
-        user = null
-        dataSource.logout(session)
-    }
-
-    @WorkerThread
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
         val result = dataSource.login(username, password)
