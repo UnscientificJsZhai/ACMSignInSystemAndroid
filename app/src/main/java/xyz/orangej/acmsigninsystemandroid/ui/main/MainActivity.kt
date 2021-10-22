@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 处理登录的逻辑。
      *
-     * @param data HMS扫码取得的数。
+     * @param data HMS扫码取得的结果。
      */
     private fun processSignIn(data: HmsScan?) {
         val signInData = qrCodeToSignInInfo(data?.originalValue ?: "")

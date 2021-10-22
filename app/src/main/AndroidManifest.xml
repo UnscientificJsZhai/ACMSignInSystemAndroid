@@ -19,6 +19,7 @@
             android:name=".ui.login.sign.SignUpActivity"
             android:exported="false"
             android:label="@string/sign_up_noLine"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:parentActivityName=".ui.login.sign.SignUpActivity" />
         <activity
             android:name=".ui.settings.InfoActivity"

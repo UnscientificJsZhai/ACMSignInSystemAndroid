@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -352,7 +353,6 @@ class SignUpActivity : AppCompatActivity() {
                     Button(
                         onClick = {
                             onSendEmailVerifyCodeButtonClick()
-                            viewModel.setTime()
                         }, modifier = Modifier.constrainAs(button) {
                             end.linkTo(parent.end)
                             top.linkTo(parent.top)
@@ -378,7 +378,11 @@ class SignUpActivity : AppCompatActivity() {
 
                     Text(
                         text = stringResource(R.string.signUp_admin),
-                        modifier = Modifier.align(Alignment.CenterVertically)
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .clickable {
+                                viewModel.admin.value = !(viewModel.admin.value ?: false)
+                            }
                     )
                 }
 

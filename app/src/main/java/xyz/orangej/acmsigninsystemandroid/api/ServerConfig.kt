@@ -26,7 +26,7 @@ fun registerURL() = "$SERVER_ADDRESS/api/register/"
  *
  * @return 字符串格式的URL。
  */
-fun logoutURL() = "$SERVER_ADDRESS/api/logout"
+fun logoutURL() = "$SERVER_ADDRESS/api/logout/"
 
 /**
  * 用户数据Url。
@@ -50,11 +50,11 @@ fun trainingHistoryURL() = "$SERVER_ADDRESS/api/getrecord/"
 fun specificTrainingHistoryURL() = "$SERVER_ADDRESS/api/getspecificrecord/"
 
 /**
- * 注册URL。
+ * 签到URL。
  *
  * @return 字符串格式的URL。
  */
-fun signInURL() = "$SERVER_ADDRESS/api/signin"
+fun signInURL() = "$SERVER_ADDRESS/api/signin/"
 
 /**
  * 获取邮箱验证码的URL。

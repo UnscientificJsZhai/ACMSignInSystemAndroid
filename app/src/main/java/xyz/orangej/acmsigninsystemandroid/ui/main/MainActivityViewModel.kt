@@ -78,7 +78,7 @@ class MainActivityViewModel(
         } catch (e: Exception) {
             return GetUserResult.Error(e)
         }
-        Log.e(TAG, "getCurrentUser: $jsonString", )
+        Log.e(TAG, "getCurrentUser: $jsonString")
         val jsonObject = try {
             JSONObject(jsonString).also {
                 assert(it.getString("status") == "success")
@@ -210,23 +210,28 @@ class MainActivityViewModel(
             return null
         }
 
-        val statusCode = item.getInt("status")
-        return try {
-            TrainingRecord(
-                sessionHash = session.hashCode(),
-                id = item.getLong("id"),
-                userName = item.getString("username"),
-                startTime = item.getString("startTime"),
-                endTime = if (statusCode == 0) {
-                    "正在训练中"
-                } else {
-                    item.getString("endTime")
-                },
-                status = statusCode,
-                timeLength = item.getString("timeLength")
-            )
-        } catch (e: JSONException) {
-            null
+        if (item.isNull("status")) {
+            //服务器已经删除，则直接返回
+            return null
+        } else {
+            val statusCode = item.getInt("status")
+            return try {
+                TrainingRecord(
+                    sessionHash = session.hashCode(),
+                    id = item.getLong("id"),
+                    userName = item.getString("username"),
+                    startTime = item.getString("startTime"),
+                    endTime = if (statusCode == 0) {
+                        "正在训练中"
+                    } else {
+                        item.getString("endTime")
+                    },
+                    status = statusCode,
+                    timeLength = item.getString("timeLength")
+                )
+            } catch (e: JSONException) {
+                null
+            }
         }
     }
 
@@ -253,7 +258,7 @@ class MainActivityViewModel(
      * @param csrfToken
      * @param token
      * @param time
-     * @return
+     * @return 服务器响应结果。
      */
     suspend fun signIn(
         session: String,
@@ -268,6 +273,7 @@ class MainActivityViewModel(
                 ""
             }
         }
+        Log.e(TAG, "signIn: $response")
         if (response == null || response == "") {
             return SignInResult.Error(SignInResult.ErrorCode.NETWORK_ERROR)
         } else {

@@ -21,6 +21,12 @@ private val mediaType: MediaType
 fun Request.Builder.addSession(session: String): Request.Builder =
     addHeader("Cookie", "sessionid=$session")
 
+fun Request.Builder.addUA(): Request.Builder =
+    this.apply {
+        removeHeader("User-Agent")
+        addHeader("User-Agent", "android")
+    }
+
 /**
  * 进行登录请求。
  *
@@ -36,6 +42,7 @@ fun OkHttpClient.callLogin(userName: String, password: String): String? {
     val request = Request.Builder()
         .url(loginURL())
         .method("POST", requestBody)
+        .addUA()
         .build()
 
     val call = this.newCall(request)
