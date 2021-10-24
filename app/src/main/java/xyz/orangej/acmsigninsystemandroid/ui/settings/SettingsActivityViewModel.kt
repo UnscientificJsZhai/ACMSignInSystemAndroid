@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
 import xyz.orangej.acmsigninsystemandroid.api.callGetTrainingHistory
+import xyz.orangej.acmsigninsystemandroid.api.callLogout
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel
 
@@ -79,5 +80,16 @@ class SettingsActivityViewModel : ViewModel() {
         }
 
         return list
+    }
+
+    /**
+     * 登出。
+     *
+     * @param session 当前登录用户的Session。
+     */
+    suspend fun logout(session: String) {
+        withContext(Dispatchers.IO) {
+            this@SettingsActivityViewModel.httpClient.callLogout(session)
+        }
     }
 }

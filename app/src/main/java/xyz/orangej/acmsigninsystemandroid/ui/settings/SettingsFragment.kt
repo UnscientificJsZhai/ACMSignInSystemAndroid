@@ -73,6 +73,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         logoutPreference = findPreference(LOGOUT_KEY)
         logoutPreference?.setOnPreferenceClickListener {
+            val session = systemApplication.session
+            viewModel.viewModelScope.launch {
+                viewModel.logout(session)
+            }
             systemApplication.session = ""
             startActivity(Intent(requireContext(), LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

@@ -56,7 +56,7 @@ class InfoActivity : AppCompatActivity() {
             val (icon, title, developer, information, github) = createRefs()
 
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
+                painter = painterResource(R.drawable.acm_foreground),
                 contentDescription = "icon",
                 modifier = Modifier
                     .constrainAs(icon) {

@@ -7,6 +7,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
@@ -62,6 +64,10 @@ class UserFragment : Fragment() {
      * 当点击登出按钮时执行的操作。
      */
     private fun onLogoutButtonClick() {
+        val session = systemApplication.session
+        viewModel.viewModelScope.launch {
+            viewModel.logout(session)
+        }
         viewModel.currentUser.removeObservers(viewLifecycleOwner)
         systemApplication.session = ""
         startActivity(Intent(requireContext(), LoginActivity::class.java))

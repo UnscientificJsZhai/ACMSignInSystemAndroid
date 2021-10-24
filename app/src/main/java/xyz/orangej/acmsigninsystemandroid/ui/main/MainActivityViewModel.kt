@@ -9,10 +9,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
-import xyz.orangej.acmsigninsystemandroid.api.callGetSpecificTrainingHistory
-import xyz.orangej.acmsigninsystemandroid.api.callGetTrainingHistory
-import xyz.orangej.acmsigninsystemandroid.api.callGetUserInfo
-import xyz.orangej.acmsigninsystemandroid.api.callSignIn
+import xyz.orangej.acmsigninsystemandroid.api.*
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
@@ -255,9 +252,9 @@ class MainActivityViewModel(
     /**
      * 登录。
      *
-     * @param csrfToken
-     * @param token
-     * @param time
+     * @param csrfToken 参数1。
+     * @param token 参数2。
+     * @param time 参数3
      * @return 服务器响应结果。
      */
     suspend fun signIn(
@@ -294,6 +291,17 @@ class MainActivityViewModel(
             } catch (e: AssertionError) {
                 return SignInResult.Error(SignInResult.ErrorCode.FAIL_TO_SIGN_IN)
             }
+        }
+    }
+
+    /**
+     * 登出。
+     *
+     * @param session 当前登录用户的Session。
+     */
+    suspend fun logout(session: String) {
+        withContext(Dispatchers.IO) {
+            this@MainActivityViewModel.httpClient.callLogout(session)
         }
     }
 }
