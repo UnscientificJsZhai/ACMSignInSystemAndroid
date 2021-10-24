@@ -1,0 +1,4 @@
+# ACMSignInSystemAndroid
+西北工业大学ACM人员训练管理系统
+
+本系统主要使用Jetpack Compose构建界面，使用OkHttp完成网络请求，是一个简单的签到系统客户端。
