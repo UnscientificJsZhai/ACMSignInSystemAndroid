@@ -259,6 +259,29 @@ fun OkHttpClient.callGetEmailCode(
 }
 
 /**
+ * 检查Api的方法。
+ *
+ * @param serverRoot 服务器地址。
+ * @return 响应结果的json字符串。
+ */
+fun OkHttpClient.callCheckApi(
+    serverRoot:String
+): String? {
+    val requestBody = RequestBody.create(
+        mediaType,
+        ""
+    )
+    val request = Request.Builder()
+        .url(checkApiURL(serverRoot))
+        .method("POST", requestBody)
+        .build()
+
+    val call = this.newCall(request)
+    val response = call.execute()
+    return response.body()?.string()
+}
+
+/**
  * 从SharedPreference中读取服务器地址信息。
  *
  * @return 服务器地址。在存储之前就先确认过作为URL的合法性。

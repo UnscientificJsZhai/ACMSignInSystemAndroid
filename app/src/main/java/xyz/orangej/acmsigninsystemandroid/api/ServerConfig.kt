@@ -65,3 +65,11 @@ fun signInURL(server: String) = "$server/api/signin/"
  * @return 字符串格式的URL。
  */
 fun getEmailCodeURL(server: String) = "$server/api/getemailcode/"
+
+/**
+ * 检查Api的URL。
+ *
+ * @param server 输入存放在设置中的服务器地址。
+ * @return 字符串格式的URL。
+ */
+fun checkApiURL(server: String) = "$server/api/"

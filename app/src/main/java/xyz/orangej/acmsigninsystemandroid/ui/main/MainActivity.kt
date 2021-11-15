@@ -94,6 +94,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (systemApplication.session.isEmpty()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+    }
+
     /**
      * 处理登录的逻辑。
      *

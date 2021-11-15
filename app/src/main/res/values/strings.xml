@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ACM签到</string>
 
-    <string name="prompt_email">电子邮箱</string>
+    <string name="prompt_email">账号</string>
     <string name="prompt_password">密码</string>
     <string name="action_sign_in">登录</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -69,6 +69,9 @@
     <string name="settings_info">关于</string>
     <string name="settings_server">服务器</string>
     <string name="settings_server_summary">指定登录、签到的服务器的地址。请在指导下修改。</string>
+    <string name="settings_server_illegal">网址不合法，请检查</string>
+    <string name="settings_server_changeSuccess">更改成功，请重新登录</string>
+    <string name="settings_server_changeFail">更改失败，请检查网址</string>
 
     <string name="info_sub">不科学的Js宅 开发</string>
     <string name="info_box1">本应用仅用于西北工业大学ACM团队日常训练打卡签到，不得用于其他用途。</string>

@@ -7,17 +7,17 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.api.getServerRoot
 import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
+import kotlin.concurrent.thread
 
 /**
  * 管理设置Preference的Fragment。
@@ -47,6 +47,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         this.systemApplication = requireContext().applicationContext as SystemApplication
+
+        if (systemApplication.session.isEmpty()) {
+            val accountPreferences: PreferenceCategory? = findPreference("account")
+            accountPreferences?.isEnabled = false
+        }
 
         jumpToWebPreference = findPreference(WEB_KEY)
         jumpToWebPreference?.setOnPreferenceClickListener {
@@ -94,11 +99,57 @@ class SettingsFragment : PreferenceFragmentCompat() {
         serverPreference = findPreference(SERVER_KEY)
         serverPreference?.setOnPreferenceChangeListener { _, newValue ->
             if (Patterns.WEB_URL.matcher(newValue.toString()).matches()) {
+                val oldValue = requireContext().getServerRoot()
+                thread {
+                    runBlocking(Dispatchers.Main) {
+                        onUpdateServerConfig(oldValue, newValue.toString())
+                    }
+                }
                 true
             } else {
-                Toast.makeText(requireContext(), "不合法", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    R.string.settings_server_illegal,
+                    Toast.LENGTH_SHORT
+                ).show()
                 false
             }
+        }
+    }
+
+    /**
+     * 更新服务器设置前调用。会清理数据
+     *
+     * @return 验证要更改的服务器是否是注册服务器。是则返回true，否则返回false。
+     */
+    private suspend fun onUpdateServerConfig(oldValue: String, newValue: String) {
+        val dialog = ProgressDialog(requireActivity()).show()
+        if (!viewModel.checkApi(newValue)) {
+            Toast.makeText(
+                requireContext(),
+                R.string.settings_server_changeFail,
+                Toast.LENGTH_SHORT
+            ).show()
+            dialog.dismiss()
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            sharedPreferences.edit().putString("server", oldValue).apply()
+        } else {
+            // 清理之前的登录状况
+            systemApplication.session = ""
+
+            withContext(Dispatchers.IO) {
+                val dao = systemApplication.getDatabase().userDao()
+                dao.deleteAllRecords()
+            }
+
+            findPreference<PreferenceCategory>("account")?.isEnabled = false
+
+            Toast.makeText(
+                requireContext(),
+                R.string.settings_server_changeSuccess,
+                Toast.LENGTH_SHORT
+            ).show()
+            dialog.dismiss()
         }
     }
 }

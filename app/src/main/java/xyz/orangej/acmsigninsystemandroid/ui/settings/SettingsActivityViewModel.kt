@@ -8,12 +8,17 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.orangej.acmsigninsystemandroid.api.callCheckApi
 import xyz.orangej.acmsigninsystemandroid.api.callGetTrainingHistory
 import xyz.orangej.acmsigninsystemandroid.api.callLogout
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
-import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel
 
 class SettingsActivityViewModel : ViewModel() {
+
+    companion object {
+
+        const val TAG = "SettingsActivityViewModel"
+    }
 
     /**
      * 处理各种网络请求的Client。
@@ -23,34 +28,39 @@ class SettingsActivityViewModel : ViewModel() {
     /**
      * 获取训练数据。
      *
+     * @param context 用于获取服务器地址。
      * @param session 当前登录用户的Session。
      * @return 新增的训练记录列表。
      */
-    suspend fun getTrainHistory(context: Context,session: String): List<TrainingRecord> {
+    suspend fun getTrainHistory(context: Context, session: String): List<TrainingRecord> {
         val jsonString =
             withContext(Dispatchers.IO) {
                 try {
-                    this@SettingsActivityViewModel.httpClient.callGetTrainingHistory(context,session, 0)
+                    this@SettingsActivityViewModel.httpClient.callGetTrainingHistory(
+                        context,
+                        session,
+                        0
+                    )
                 } catch (e: Exception) {
                     null
                 }
             } ?: return emptyList()
-        Log.e(MainActivityViewModel.TAG, "getTrainHistory: $jsonString")
+        Log.e(TAG, "getTrainHistory: $jsonString")
         val jsonObject = try {
             JSONObject(jsonString).also {
                 assert(it.getString("status") == "success")
             }
         } catch (e: JSONException) {
-            Log.e(MainActivityViewModel.TAG, "getTrainHistory: $e")
+            Log.e(TAG, "getTrainHistory: $e")
             return emptyList()
         } catch (e: AssertionError) {
-            Log.e(MainActivityViewModel.TAG, "getTrainHistory: $e")
+            Log.e(TAG, "getTrainHistory: $e")
             return emptyList()
         }
         val array = try {
             jsonObject.getJSONObject("data").getJSONArray("records")
         } catch (e: JSONException) {
-            Log.e(MainActivityViewModel.TAG, "getTrainHistory: $e")
+            Log.e(TAG, "getTrainHistory: $e")
             return emptyList()
         }
 
@@ -86,11 +96,36 @@ class SettingsActivityViewModel : ViewModel() {
     /**
      * 登出。
      *
+     * @param context 用于获取服务器地址。
      * @param session 当前登录用户的Session。
      */
-    suspend fun logout(context: Context,session: String) {
+    suspend fun logout(context: Context, session: String) {
         withContext(Dispatchers.IO) {
-            this@SettingsActivityViewModel.httpClient.callLogout(context ,session)
+            this@SettingsActivityViewModel.httpClient.callLogout(context, session)
+        }
+    }
+
+    /**
+     * 检查Api。
+     *
+     * @param server 服务器地址。
+     * @return 服务器是否合法。
+     */
+    suspend fun checkApi(server:String): Boolean {
+        val response = withContext(Dispatchers.IO) {
+            try {
+                this@SettingsActivityViewModel.httpClient.callCheckApi(server)
+            } catch (e: Exception) {
+                ""
+            }
+        }
+        Log.e(TAG, "getTrainHistory: $response")
+        try {
+            JSONObject(response ?: "").also {
+                return it.getString("status") == "success"
+            }
+        } catch (e: JSONException) {
+            return false
         }
     }
 }

@@ -1,7 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,14 +65,17 @@ class DashboardFragment : Fragment() {
 
                 taskList.add(async(Dispatchers.IO) {
                     val maxId = dao.getBiggestRecordId()
-                    val list = viewModel.getTrainHistory(requireContext(),systemApplication.session, maxId)
+                    val list = viewModel.getTrainHistory(
+                        requireContext(),
+                        systemApplication.session,
+                        maxId
+                    )
                     for (item in list) {
                         dao.addRecord(item)
                     }
                 })
                 taskList.add(async(Dispatchers.IO) {
                     val invalidRecords = dao.getUnrecordedRecords()
-                    Log.e("size", invalidRecords.size.toString())
                     for (index in 0 until min(MAX_REFRESH_NUMBER, invalidRecords.size)) {
                         val oldRecord = invalidRecords[index]
                         val newRecord = viewModel.getSpecificTrainingHistory(

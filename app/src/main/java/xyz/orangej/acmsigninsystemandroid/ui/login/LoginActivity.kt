@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -23,6 +25,7 @@ import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.databinding.ActivityLoginBinding
 import xyz.orangej.acmsigninsystemandroid.ui.login.sign.SignUpActivity
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivity
+import xyz.orangej.acmsigninsystemandroid.ui.settings.SettingsActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -147,6 +150,18 @@ class LoginActivity : AppCompatActivity() {
             "$welcome $displayName",
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.login_activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.settings) {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
