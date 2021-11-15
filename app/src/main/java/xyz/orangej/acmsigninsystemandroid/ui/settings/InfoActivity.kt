@@ -111,7 +111,7 @@ class InfoActivity : AppCompatActivity() {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }) {
-                    Text("Github")
+                    Text("GitHub")
                 }
             }
         }

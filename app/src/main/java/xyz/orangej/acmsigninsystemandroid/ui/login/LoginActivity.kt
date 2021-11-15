@@ -112,7 +112,11 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.viewModelScope.launch {
                     loading.visibility = View.VISIBLE
                     systemApplication.session = //登录成功即保存Session
-                        loginViewModel.login(username.text.toString(), password.text.toString())
+                        loginViewModel.login(
+                            this@LoginActivity,
+                            username.text.toString(),
+                            password.text.toString()
+                        )
                 }
             }
         }

@@ -66,7 +66,7 @@ class UserFragment : Fragment() {
     private fun onLogoutButtonClick() {
         val session = systemApplication.session
         viewModel.viewModelScope.launch {
-            viewModel.logout(session)
+            viewModel.logout(requireContext(), session)
         }
         viewModel.currentUser.removeObservers(viewLifecycleOwner)
         systemApplication.session = ""

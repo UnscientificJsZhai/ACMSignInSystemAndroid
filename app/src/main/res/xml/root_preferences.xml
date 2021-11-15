@@ -22,6 +22,12 @@
 
     <PreferenceCategory app:title="@string/settings_other">
 
+        <EditTextPreference
+            android:defaultValue="https://www.orangej.xyz"
+            app:key="server"
+            app:summary="@string/settings_server_summary"
+            app:title="@string/settings_server" />
+
         <Preference
             app:icon="@drawable/outline_info_24"
             app:key="info"

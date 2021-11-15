@@ -3,8 +3,11 @@ package xyz.orangej.acmsigninsystemandroid.ui.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Patterns
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
-import xyz.orangej.acmsigninsystemandroid.api.SERVER_ADDRESS
+import xyz.orangej.acmsigninsystemandroid.api.getServerRoot
 import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 
@@ -28,6 +31,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val REFRESH_KEY = "refresh"
 
         const val LOGOUT_KEY = "logout"
+
+        const val SERVER_KEY = "server"
     }
 
     private lateinit var systemApplication: SystemApplication
@@ -37,6 +42,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var jumpToWebPreference: Preference? = null
     private var refreshPreference: Preference? = null
     private var logoutPreference: Preference? = null
+    private var serverPreference: EditTextPreference? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -45,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         jumpToWebPreference = findPreference(WEB_KEY)
         jumpToWebPreference?.setOnPreferenceClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(SERVER_ADDRESS)
+            intent.data = Uri.parse(requireContext().getServerRoot())
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             true
@@ -56,7 +62,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             viewModel.viewModelScope.launch {
                 val dialog = ProgressDialog(requireActivity())
                 dialog.show()
-                val list = viewModel.getTrainHistory(systemApplication.session)
+                val list = viewModel.getTrainHistory(requireContext(), systemApplication.session)
                 withContext(Dispatchers.IO) {
                     if (list.isNotEmpty()) {
                         val dao = systemApplication.getDatabase().userDao()
@@ -75,7 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         logoutPreference?.setOnPreferenceClickListener {
             val session = systemApplication.session
             viewModel.viewModelScope.launch {
-                viewModel.logout(session)
+                viewModel.logout(requireContext(), session)
             }
             systemApplication.session = ""
             startActivity(Intent(requireContext(), LoginActivity::class.java).apply {
@@ -83,6 +89,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
             })
             requireActivity().finish()
             true
+        }
+
+        serverPreference = findPreference(SERVER_KEY)
+        serverPreference?.setOnPreferenceChangeListener { _, newValue ->
+            if (Patterns.WEB_URL.matcher(newValue.toString()).matches()) {
+                true
+            } else {
+                Toast.makeText(requireContext(), "不合法", Toast.LENGTH_SHORT).show()
+                false
+            }
         }
     }
 }

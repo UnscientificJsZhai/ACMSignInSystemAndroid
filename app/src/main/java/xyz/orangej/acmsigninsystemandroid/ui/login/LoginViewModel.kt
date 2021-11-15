@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -62,8 +63,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      * @param password 密码。
      * @return Session。
      */
-    suspend fun login(username: String, password: String): String {
-        val result = withContext(Dispatchers.IO) { loginRepository.login(username, password) }
+    suspend fun login(context: Context, username: String, password: String): String {
+        val result =
+            withContext(Dispatchers.IO) { loginRepository.login(context, username, password) }
 
         if (result is Result.Success) {
             _loginResult.value =

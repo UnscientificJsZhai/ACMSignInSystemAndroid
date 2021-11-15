@@ -66,7 +66,7 @@ class DashboardFragment : Fragment() {
 
                 taskList.add(async(Dispatchers.IO) {
                     val maxId = dao.getBiggestRecordId()
-                    val list = viewModel.getTrainHistory(systemApplication.session, maxId)
+                    val list = viewModel.getTrainHistory(requireContext(),systemApplication.session, maxId)
                     for (item in list) {
                         dao.addRecord(item)
                     }
@@ -77,6 +77,7 @@ class DashboardFragment : Fragment() {
                     for (index in 0 until min(MAX_REFRESH_NUMBER, invalidRecords.size)) {
                         val oldRecord = invalidRecords[index]
                         val newRecord = viewModel.getSpecificTrainingHistory(
+                            requireContext(),
                             systemApplication.session,
                             oldRecord.id
                         )

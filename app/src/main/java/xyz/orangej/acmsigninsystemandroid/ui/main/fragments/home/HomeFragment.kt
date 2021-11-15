@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
         const val REQUEST_CODE_SCAN_ONE = 12
     }
 
-    private lateinit var permissionRequestCallback: ActivityResultLauncher<Array<out String>>
+    private lateinit var permissionRequestCallback: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

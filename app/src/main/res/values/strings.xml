@@ -67,6 +67,8 @@
     <string name="settings_logout">登出</string>
     <string name="settings_other">其它</string>
     <string name="settings_info">关于</string>
+    <string name="settings_server">服务器</string>
+    <string name="settings_server_summary">指定登录、签到的服务器的地址。请在指导下修改。</string>
 
     <string name="info_sub">不科学的Js宅 开发</string>
     <string name="info_box1">本应用仅用于西北工业大学ACM团队日常训练打卡签到，不得用于其他用途。</string>

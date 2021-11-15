@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login.sign
 
+import android.content.Context
 import android.os.CountDownTimer
 import android.util.Patterns
 import androidx.lifecycle.LiveData
@@ -99,7 +100,7 @@ class SignUpActivityViewModel : ViewModel() {
     /**
      * 发起注册请求。
      */
-    suspend fun signUp(): SignUpResult {
+    suspend fun signUp(context: Context): SignUpResult {
         val username = this.userName.value ?: ""
         val password = this.password.value ?: ""
         val name = this.name.value ?: ""
@@ -112,6 +113,7 @@ class SignUpActivityViewModel : ViewModel() {
         val response = try {
             withContext(Dispatchers.IO) {
                 this@SignUpActivityViewModel.client.callSignUp(
+                    context,
                     username,
                     password,
                     name,
@@ -150,13 +152,13 @@ class SignUpActivityViewModel : ViewModel() {
     /**
      * 获取邮箱验证码。调用前需要确认用户名和邮箱地址合法。
      */
-    suspend fun getEmailVerifyCode(): Boolean {
+    suspend fun getEmailVerifyCode(context: Context): Boolean {
         val username = this.userName.value ?: ""
         val email = this.email.value ?: ""
 
         val response = try {
             withContext(Dispatchers.IO) {
-                this@SignUpActivityViewModel.client.callGetEmailCode(username, email)
+                this@SignUpActivityViewModel.client.callGetEmailCode(context,username, email)
             }
         } catch (e: IOException) {
             return false
@@ -164,5 +166,4 @@ class SignUpActivityViewModel : ViewModel() {
 
         return response?.contains("success") == true
     }
-
 }

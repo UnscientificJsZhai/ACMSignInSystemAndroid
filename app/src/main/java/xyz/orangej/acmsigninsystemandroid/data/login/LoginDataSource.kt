@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.data.login
 
+import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.OkHttpClient
 import org.json.JSONObject
@@ -23,9 +24,9 @@ class LoginDataSource {
      * @param password 密码。
      */
     @WorkerThread
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(context: Context, username: String, password: String): Result<LoggedInUser> {
         try {
-            val responseBody = client.callLogin(username, password)
+            val responseBody = client.callLogin(context, username, password)
             val responseJsonObject =
                 JSONObject(
                     responseBody ?: return Result.Error(IOException("Empty response"))

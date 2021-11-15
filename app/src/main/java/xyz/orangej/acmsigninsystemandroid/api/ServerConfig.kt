@@ -3,62 +3,65 @@
 package xyz.orangej.acmsigninsystemandroid.api
 
 /**
- * 服务器地址。
- */
-const val SERVER_ADDRESS = "https://www.orangej.xyz"
-
-/**
  * 登录Url。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun loginURL() = "$SERVER_ADDRESS/api/login/"
+fun loginURL(server: String) = "$server/api/login/"
 
 /**
  * 注册Url。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun registerURL() = "$SERVER_ADDRESS/api/register/"
+fun registerURL(server: String) = "$server/api/register/"
 
 /**
  * 登出Url。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun logoutURL() = "$SERVER_ADDRESS/api/logout/"
+fun logoutURL(server: String) = "$server/api/logout/"
 
 /**
  * 用户数据Url。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun userInfoURL() = "$SERVER_ADDRESS/api/getuserinfo/"
+fun userInfoURL(server: String) = "$server/api/getuserinfo/"
 
 /**
  * 训练记录URL。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun trainingHistoryURL() = "$SERVER_ADDRESS/api/getrecord/"
+fun trainingHistoryURL(server: String) = "$server/api/getrecord/"
 
 /**
  * 获取制定的训练记录的URL。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun specificTrainingHistoryURL() = "$SERVER_ADDRESS/api/getspecificrecord/"
+fun specificTrainingHistoryURL(server: String) = "$server/api/getspecificrecord/"
 
 /**
  * 签到URL。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun signInURL() = "$SERVER_ADDRESS/api/signin/"
+fun signInURL(server: String) = "$server/api/signin/"
 
 /**
  * 获取邮箱验证码的URL。
  *
+ * @param server 输入存放在设置中的服务器地址。
  * @return 字符串格式的URL。
  */
-fun getEmailCodeURL() = "$SERVER_ADDRESS/api/getemailcode/"
+fun getEmailCodeURL(server: String) = "$server/api/getemailcode/"

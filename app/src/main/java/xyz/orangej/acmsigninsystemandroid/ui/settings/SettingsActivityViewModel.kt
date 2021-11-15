@@ -1,5 +1,6 @@
 package xyz.orangej.acmsigninsystemandroid.ui.settings
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,11 +26,11 @@ class SettingsActivityViewModel : ViewModel() {
      * @param session 当前登录用户的Session。
      * @return 新增的训练记录列表。
      */
-    suspend fun getTrainHistory(session: String): List<TrainingRecord> {
+    suspend fun getTrainHistory(context: Context,session: String): List<TrainingRecord> {
         val jsonString =
             withContext(Dispatchers.IO) {
                 try {
-                    this@SettingsActivityViewModel.httpClient.callGetTrainingHistory(session, 0)
+                    this@SettingsActivityViewModel.httpClient.callGetTrainingHistory(context,session, 0)
                 } catch (e: Exception) {
                     null
                 }
@@ -87,9 +88,9 @@ class SettingsActivityViewModel : ViewModel() {
      *
      * @param session 当前登录用户的Session。
      */
-    suspend fun logout(session: String) {
+    suspend fun logout(context: Context,session: String) {
         withContext(Dispatchers.IO) {
-            this@SettingsActivityViewModel.httpClient.callLogout(session)
+            this@SettingsActivityViewModel.httpClient.callLogout(context ,session)
         }
     }
 }

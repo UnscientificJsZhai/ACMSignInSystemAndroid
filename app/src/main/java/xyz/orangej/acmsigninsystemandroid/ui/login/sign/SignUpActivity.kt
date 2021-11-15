@@ -56,7 +56,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun onSignUpButtonClick() {
         if (viewModel.isDataLegal()) {
             viewModel.viewModelScope.launch {
-                when (viewModel.signUp()) {
+                when (viewModel.signUp(this@SignUpActivity)) {
                     SignUpActivityViewModel.SignUpResult.SUCCESS -> onSuccessSignUp()
                     SignUpActivityViewModel.SignUpResult.ERROR -> Toast.makeText(
                         this@SignUpActivity,
@@ -96,7 +96,7 @@ class SignUpActivity : AppCompatActivity() {
         if (LoginViewModel.isUserNameValid(viewModel.userName.value ?: "")) {
             if (Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: "").matches()) {
                 viewModel.viewModelScope.launch {
-                    if (viewModel.getEmailVerifyCode()) {
+                    if (viewModel.getEmailVerifyCode(this@SignUpActivity)) {
                         viewModel.setTime()
                     } else {
                         Toast.makeText(
