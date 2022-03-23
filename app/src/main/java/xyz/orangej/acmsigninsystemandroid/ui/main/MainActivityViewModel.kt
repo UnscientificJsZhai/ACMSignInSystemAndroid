@@ -1,20 +1,21 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
-import xyz.orangej.acmsigninsystemandroid.api.*
+import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
+import xyz.orangej.acmsigninsystemandroid.util.formattedSession
+import xyz.orangej.acmsigninsystemandroid.util.string
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * MainActivity的ViewModel。
@@ -40,10 +41,8 @@ class MainActivityViewModel(
         class Error(val exception: Throwable) : GetUserResult()
     }
 
-    /**
-     * 处理各种网络请求的Client。
-     */
-    private val httpClient = OkHttpClient()
+    @Inject
+    lateinit var client: HttpApi
 
     /**
      * 初始化此ViewModel的工厂。
@@ -66,13 +65,13 @@ class MainActivityViewModel(
     /**
      * 获取当前用户信息。如果返回null则为登录失效。
      *
-     * @param session
+     * @param session 当前登录用户的Session。
      */
-    suspend fun getCurrentUser(context: Context, session: String): GetUserResult {
+    suspend fun getCurrentUser(session: String): GetUserResult {
         val jsonString = try {
             withContext(Dispatchers.IO) {
-                this@MainActivityViewModel.httpClient.callGetUserInfo(context, session)
-            } ?: return GetUserResult.Error(RuntimeException("空返回结果"))
+                this@MainActivityViewModel.client.getUserInfo(formattedSession(session)).string()
+            }
         } catch (e: Exception) {
             return GetUserResult.Error(e)
         }
@@ -118,18 +117,16 @@ class MainActivityViewModel(
      * @return 新增的训练记录列表。
      */
     suspend fun getTrainHistory(
-        context: Context,
         session: String,
         startAt: Int = 0
     ): List<TrainingRecord> {
         val jsonString =
             withContext(Dispatchers.IO) {
                 try {
-                    this@MainActivityViewModel.httpClient.callGetTrainingHistory(
-                        context,
-                        session,
+                    this@MainActivityViewModel.client.getTrainHistory(
+                        formattedSession(session),
                         startAt
-                    )
+                    ).string()
                 } catch (e: java.lang.Exception) {
                     null
                 }
@@ -190,17 +187,15 @@ class MainActivityViewModel(
      * @return 特定的训练记录。
      */
     suspend fun getSpecificTrainingHistory(
-        context: Context,
         session: String,
         id: Long
     ): TrainingRecord? {
         val jsonString = withContext(Dispatchers.IO) {
             try {
-                this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(
-                    context,
+                this@MainActivityViewModel.client.getSpecificTrainingHistory(
                     session,
                     id
-                )
+                ).string()
             } catch (e: IOException) {
                 null
             }
@@ -275,7 +270,6 @@ class MainActivityViewModel(
      * @return 服务器响应结果。
      */
     suspend fun signIn(
-        context: Context,
         session: String,
         csrfToken: String,
         token: String,
@@ -283,19 +277,18 @@ class MainActivityViewModel(
     ): SignInResult {
         val response = withContext(Dispatchers.IO) {
             try {
-                this@MainActivityViewModel.httpClient.callSignIn(
-                    context,
+                this@MainActivityViewModel.client.signIn(
                     session,
                     csrfToken,
                     token,
                     time
-                )
+                ).string()
             } catch (e: IOException) {
                 ""
             }
         }
         Log.e(TAG, "signIn: $response")
-        if (response == null || response == "") {
+        if (response == "") {
             return SignInResult.Error(SignInResult.ErrorCode.NETWORK_ERROR)
         } else {
             val json = try {
@@ -323,9 +316,9 @@ class MainActivityViewModel(
      *
      * @param session 当前登录用户的Session。
      */
-    suspend fun logout(context: Context, session: String) {
+    suspend fun logout(session: String) {
         withContext(Dispatchers.IO) {
-            this@MainActivityViewModel.httpClient.callLogout(context, session)
+            this@MainActivityViewModel.client.logout(session)
         }
     }
 }

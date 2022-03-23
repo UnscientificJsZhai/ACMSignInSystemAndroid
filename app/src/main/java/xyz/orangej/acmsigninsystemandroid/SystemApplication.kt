@@ -33,6 +33,9 @@ class SystemApplication : Application() {
     lateinit var database: UserInformationDatabase
         @JvmName("_getDatabase") get
 
+    @Inject
+    lateinit var loginDataSource: LoginDataSource
+
     /**
      * 保存的session数据。
      */
@@ -44,7 +47,7 @@ class SystemApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        this.loginRepository = LoginRepository(LoginDataSource())
+        this.loginRepository = LoginRepository(this.loginDataSource)
         getDatabase()
 
         val mainKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)

@@ -69,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             viewModel.viewModelScope.launch {
                 val dialog = ProgressDialog(requireActivity())
                 dialog.show()
-                val list = viewModel.getTrainHistory(requireContext(), systemApplication.session)
+                val list = viewModel.getTrainHistory(systemApplication.session)
                 withContext(Dispatchers.IO) {
                     if (list.isNotEmpty()) {
                         val dao = systemApplication.getDatabase().userDao()
@@ -89,7 +89,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         logoutPreference?.setOnPreferenceClickListener {
             val session = systemApplication.session
             viewModel.viewModelScope.launch {
-                viewModel.logout(requireContext(), session)
+                viewModel.logout(session)
             }
             systemApplication.session = ""
             startActivity(Intent(requireContext(), LoginActivity::class.java).apply {

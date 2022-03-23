@@ -11,6 +11,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import xyz.orangej.acmsigninsystemandroid.api.HttpApi
+import xyz.orangej.acmsigninsystemandroid.api.NormalOkHttpClient
+import xyz.orangej.acmsigninsystemandroid.api.TestOkHttpClient
 import javax.inject.Singleton
 
 /**
@@ -22,18 +24,30 @@ object RetrofitApiModule {
 
     @Provides
     @Singleton
+    @NormalOkHttpClient
     fun provideOkHttpClient() = OkHttpClient()
         .newBuilder()
         .addInterceptor { chain ->
             val request = chain.request()
                 .newBuilder()
+                .removeHeader("User-Agent")
+                .addHeader("ContentType", "application/x-www-form-urlencoded")
+                .addHeader("User-Agent", "android")
                 .build()
             chain.proceed(request)
         }.build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, @ApplicationContext context: Context): HttpApi {
+    @TestOkHttpClient
+    fun provideTestClient() = OkHttpClient()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        @NormalOkHttpClient okHttpClient: OkHttpClient,
+        @ApplicationContext context: Context
+    ): HttpApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(context.getServerRoot())
             .client(okHttpClient)
@@ -58,7 +72,7 @@ object RetrofitApiModule {
      * @param original 输入服务器地址。
      * @return 格式化后的服务器地址。
      */
-    private fun formatServerAddress(original: String): String {
+    fun formatServerAddress(original: String): String {
         return if (Patterns.WEB_URL.matcher(original).matches()) {
             var current = original
             while (current.endsWith("/")) {

@@ -3,8 +3,8 @@ package xyz.orangej.acmsigninsystemandroid.ui.settings
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import xyz.orangej.acmsigninsystemandroid.R
+import javax.inject.Inject
 
 /**
  * 设置Activity，逻辑见Fragment。
@@ -13,13 +13,12 @@ import xyz.orangej.acmsigninsystemandroid.R
  */
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsActivityViewModel
+    @Inject
+    lateinit var viewModel: SettingsActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
-
-        this.viewModel = ViewModelProvider(this)[SettingsActivityViewModel::class.java]
 
         if (savedInstanceState == null) {
             supportFragmentManager

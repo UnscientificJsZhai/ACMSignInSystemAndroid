@@ -1,24 +1,23 @@
 package xyz.orangej.acmsigninsystemandroid.ui.login.sign
 
-import android.content.Context
 import android.os.CountDownTimer
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
-import xyz.orangej.acmsigninsystemandroid.api.callGetEmailCode
-import xyz.orangej.acmsigninsystemandroid.api.callSignUp
+import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginViewModel
+import xyz.orangej.acmsigninsystemandroid.util.string
 import java.io.IOException
+import javax.inject.Inject
 
-class SignUpActivityViewModel : ViewModel() {
-
-    private val client = OkHttpClient()
+@HiltViewModel
+class SignUpActivityViewModel @Inject constructor(private val client: HttpApi) : ViewModel() {
 
     val userName = MutableLiveData("")
     val password = MutableLiveData("")
@@ -100,7 +99,7 @@ class SignUpActivityViewModel : ViewModel() {
     /**
      * 发起注册请求。
      */
-    suspend fun signUp(context: Context): SignUpResult {
+    suspend fun signUp(): SignUpResult {
         val username = this.userName.value ?: ""
         val password = this.password.value ?: ""
         val name = this.name.value ?: ""
@@ -112,8 +111,7 @@ class SignUpActivityViewModel : ViewModel() {
 
         val response = try {
             withContext(Dispatchers.IO) {
-                this@SignUpActivityViewModel.client.callSignUp(
-                    context,
+                this@SignUpActivityViewModel.client.signUp(
                     username,
                     password,
                     name,
@@ -122,13 +120,13 @@ class SignUpActivityViewModel : ViewModel() {
                     adminVerify,
                     email,
                     emailVerify
-                )
+                ).string()
             }
         } catch (e: IOException) {
             return SignUpResult.NETWORK_ERROR
         }
         val json = try {
-            JSONObject(response ?: return SignUpResult.NETWORK_ERROR)
+            JSONObject(response)
         } catch (e: JSONException) {
             return SignUpResult.ERROR
         }
@@ -152,18 +150,18 @@ class SignUpActivityViewModel : ViewModel() {
     /**
      * 获取邮箱验证码。调用前需要确认用户名和邮箱地址合法。
      */
-    suspend fun getEmailVerifyCode(context: Context): Boolean {
+    suspend fun getEmailVerifyCode(): Boolean {
         val username = this.userName.value ?: ""
         val email = this.email.value ?: ""
 
         val response = try {
             withContext(Dispatchers.IO) {
-                this@SignUpActivityViewModel.client.callGetEmailCode(context, username, email)
+                this@SignUpActivityViewModel.client.getEmailCode(username, email).string()
             }
         } catch (e: IOException) {
             return false
         }
 
-        return response?.contains("success") == true
+        return response.contains("success")
     }
 }

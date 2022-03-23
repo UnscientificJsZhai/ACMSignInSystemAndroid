@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,17 +16,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
@@ -35,15 +31,15 @@ import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginViewModel
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard.mainTextColor
+import javax.inject.Inject
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SignUpActivityViewModel
+    @Inject
+    lateinit var viewModel: SignUpActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        this.viewModel = ViewModelProvider(this)[SignUpActivityViewModel::class.java]
 
         setContent {
             SignUpPage(onButtonClick = ::onSignUpButtonClick)
@@ -56,7 +52,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun onSignUpButtonClick() {
         if (viewModel.isDataLegal()) {
             viewModel.viewModelScope.launch {
-                when (viewModel.signUp(this@SignUpActivity)) {
+                when (viewModel.signUp()) {
                     SignUpActivityViewModel.SignUpResult.SUCCESS -> onSuccessSignUp()
                     SignUpActivityViewModel.SignUpResult.ERROR -> Toast.makeText(
                         this@SignUpActivity,
@@ -96,7 +92,7 @@ class SignUpActivity : AppCompatActivity() {
         if (LoginViewModel.isUserNameValid(viewModel.userName.value ?: "")) {
             if (Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: "").matches()) {
                 viewModel.viewModelScope.launch {
-                    if (viewModel.getEmailVerifyCode(this@SignUpActivity)) {
+                    if (viewModel.getEmailVerifyCode()) {
                         viewModel.setTime()
                     } else {
                         Toast.makeText(
@@ -405,22 +401,6 @@ class SignUpActivity : AppCompatActivity() {
                     )
                 }
             }
-        }
-    }
-
-    @Preview
-    @Composable
-    fun SignUpPagePreview() {
-        Column(modifier = Modifier.background(Color.White)) {
-            SignUpPage(viewModel = SignUpActivityViewModel()) {}
-        }
-    }
-
-    @Preview
-    @Composable
-    fun Overall() {
-        Column(modifier = Modifier.background(Color.White)) {
-            InputArea(viewModel = SignUpActivityViewModel())
         }
     }
 }

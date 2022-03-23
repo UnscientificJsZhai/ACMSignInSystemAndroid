@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         viewModel.viewModelScope.launch {
-            val result = viewModel.getCurrentUser(this@MainActivity, systemApplication.session)
+            val result = viewModel.getCurrentUser(systemApplication.session)
 
             if (result is MainActivityViewModel.GetUserResult.Error) {
                 if (result.exception is SocketException || result.exception is SSLHandshakeException) {
@@ -117,11 +117,10 @@ class MainActivity : AppCompatActivity() {
                 val dialog = ProgressDialog(this@MainActivity)
                 dialog.show()
                 val response = viewModel.signIn(
-                    context = this@MainActivity,
+                    session = systemApplication.session,
                     csrfToken = signInData.csrfToken,
                     token = signInData.token,
-                    time = signInData.time,
-                    session = systemApplication.session
+                    time = signInData.time
                 )
                 when (response) {
                     is MainActivityViewModel.SignInResult.Error -> {

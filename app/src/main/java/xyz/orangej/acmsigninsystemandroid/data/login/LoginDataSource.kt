@@ -1,22 +1,18 @@
 package xyz.orangej.acmsigninsystemandroid.data.login
 
-import android.content.Context
 import android.util.Log
 import androidx.annotation.WorkerThread
-import okhttp3.OkHttpClient
 import org.json.JSONObject
-import xyz.orangej.acmsigninsystemandroid.api.callLogin
+import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
+import xyz.orangej.acmsigninsystemandroid.util.string
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * 处理登录和身份认证的类。
  */
-class LoginDataSource {
-
-    private val client by lazy {
-        OkHttpClient()
-    }
+class LoginDataSource @Inject constructor(private val client: HttpApi) {
 
     /**
      * 登录的实现。
@@ -25,21 +21,21 @@ class LoginDataSource {
      * @param password 密码。
      */
     @WorkerThread
-    fun login(context: Context, username: String, password: String): Result<LoggedInUser> {
-        try {
-            val responseBody = client.callLogin(context, username, password)
+    fun login(username: String, password: String): Result<LoggedInUser> {
+        return try {
+            val responseBody = client.login(username, password).string()
             Log.e("LoginDataSource", "login: $responseBody")
             val responseJsonObject =
                 JSONObject(
-                    responseBody ?: return Result.Error(IOException("Empty response"))
+                    responseBody
                 ).getJSONObject("data")
             val user = LoggedInUser(
                 userId = responseJsonObject.getString("sessionId"),
                 displayName = responseJsonObject.getString("username")
             )
-            return Result.Success(user)
+            Result.Success(user)
         } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
+            Result.Error(IOException("Error logging in", e))
         }
     }
 }

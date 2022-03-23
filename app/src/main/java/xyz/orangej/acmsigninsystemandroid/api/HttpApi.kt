@@ -4,7 +4,6 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import xyz.orangej.acmsigninsystemandroid.util.formattedSession
 
@@ -17,12 +16,6 @@ import xyz.orangej.acmsigninsystemandroid.util.formattedSession
  */
 interface HttpApi {
 
-    companion object {
-
-        const val CONTENT_TYPE_HEADER = "ContentType:application/x-www-form-urlencoded"
-        const val UA_HEADER = "User-Agent:android"
-    }
-
     /**
      * 进行登录请求。
      *
@@ -31,7 +24,6 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/login/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun login(
         @Field("username") username: String,
         @Field("password") password: String
@@ -44,7 +36,6 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/logout")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun logout(@Header("Cookie") formattedSession: String): Response<ResponseBody>
 
     /**
@@ -54,7 +45,6 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/getuserinfo/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun getUserInfo(@Header("Cookie") formattedSession: String): Response<ResponseBody>
 
     /**
@@ -62,7 +52,6 @@ interface HttpApi {
      */
     //TODO 确认接口信息
     @POST("api/getrecord/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun getTrainHistory(
         @Header("Cookie") formattedSession: String,
         @Field("start") start: Int? = null,
@@ -78,7 +67,6 @@ interface HttpApi {
      * @return 特定的训练记录。响应结果。
      */
     @POST("api/getspecificrecord/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun getSpecificTrainingHistory(
         @Header("Cookie") formattedSession: String,
         @Field("id") id: Long
@@ -94,7 +82,6 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/signin/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun signIn(
         @Header("Cookie") formattedSession: String,
         @Field("csrf_token") csrfToken: String,
@@ -116,7 +103,6 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/register/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun signUp(
         @Field("username") username: String,
         @Field("password") password: String,
@@ -136,13 +122,8 @@ interface HttpApi {
      * @return 响应结果的json字符串。
      */
     @POST("api/getemailcode/")
-    @Headers(CONTENT_TYPE_HEADER, UA_HEADER)
     fun getEmailCode(
         @Field("username") username: String,
         @Field("email") email: String
     ): Response<ResponseBody>
-
-    @POST("api/")
-    @Headers(CONTENT_TYPE_HEADER)
-    fun checkApi(): Response<ResponseBody>
 }
