@@ -16,6 +16,11 @@ import xyz.orangej.acmsigninsystemandroid.util.string
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * 注册Activity的ViewModel。
+ *
+ * @see SignUpActivity
+ */
 @HiltViewModel
 class SignUpActivityViewModel @Inject constructor(private val client: HttpApi) : ViewModel() {
 

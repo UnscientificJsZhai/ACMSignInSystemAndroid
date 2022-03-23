@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.huawei.hms.hmsscankit.ScanUtil
 import com.huawei.hms.ml.scan.HmsScan
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,6 +31,10 @@ import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home.HomeFragment
 import java.net.SocketException
 import javax.net.ssl.SSLHandshakeException
 
+/**
+ * 主页Activity。是3个Fragment的容器。
+ */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var systemApplication: SystemApplication
@@ -42,11 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         this.systemApplication = application as SystemApplication
         val dao = systemApplication.getDatabase().userDao()
-        val hash = systemApplication.session.hashCode()
-        this.viewModel = ViewModelProvider(
-            this,
-            MainActivityViewModel.Factory(dao, hash)
-        )[MainActivityViewModel::class.java]
+
+        this.viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -24,22 +24,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginViewModel
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.dashboard.mainTextColor
-import javax.inject.Inject
 
+/**
+ * 注册Activity。
+ */
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var viewModel: SignUpActivityViewModel
+    private lateinit var viewModel: SignUpActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        this.viewModel = ViewModelProvider(this)[SignUpActivityViewModel::class.java]
 
         setContent {
             SignUpPage(onButtonClick = ::onSignUpButtonClick)

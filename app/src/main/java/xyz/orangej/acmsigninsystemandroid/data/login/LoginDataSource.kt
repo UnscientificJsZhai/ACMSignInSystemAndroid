@@ -2,6 +2,7 @@ package xyz.orangej.acmsigninsystemandroid.data.login
 
 import android.util.Log
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
@@ -23,7 +24,7 @@ class LoginDataSource @Inject constructor(private val client: HttpApi) {
     @WorkerThread
     fun login(username: String, password: String): Result<LoggedInUser> {
         return try {
-            val responseBody = client.login(username, password).string()
+            val responseBody = runBlocking { client.login(username, password).string() }
             Log.e("LoginDataSource", "login: $responseBody")
             val responseJsonObject =
                 JSONObject(

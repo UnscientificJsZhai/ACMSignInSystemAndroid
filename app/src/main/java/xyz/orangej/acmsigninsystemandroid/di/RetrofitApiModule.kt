@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.api.NormalOkHttpClient
 import xyz.orangej.acmsigninsystemandroid.api.TestOkHttpClient
@@ -50,6 +51,7 @@ object RetrofitApiModule {
     ): HttpApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(context.getServerRoot())
+            .addConverterFactory(ScalarsConverterFactory.create())
             .client(okHttpClient)
             .build()
         return retrofit.create(HttpApi::class.java)

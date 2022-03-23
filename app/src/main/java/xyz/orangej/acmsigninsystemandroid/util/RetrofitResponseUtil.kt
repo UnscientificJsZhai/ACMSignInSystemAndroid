@@ -1,6 +1,5 @@
 package xyz.orangej.acmsigninsystemandroid.util
 
-import okhttp3.ResponseBody
 import retrofit2.Response
 
 /**
@@ -9,7 +8,7 @@ import retrofit2.Response
  * @receiver Retrofit响应结果。
  * @return 响应的字符串。如果响应body为null，则返回空字符串而不是null。
  */
-fun Response<ResponseBody>.string() = this.body()?.string() ?: ""
+fun Response<String>.string(): String = this.body() ?: ""
 
 /**
  * 格式化的SessionID参数。

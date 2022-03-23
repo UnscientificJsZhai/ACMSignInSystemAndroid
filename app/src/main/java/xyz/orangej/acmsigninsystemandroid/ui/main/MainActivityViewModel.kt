@@ -1,13 +1,16 @@
 package xyz.orangej.acmsigninsystemandroid.ui.main
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.orangej.acmsigninsystemandroid.SystemApplication
 import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
@@ -22,10 +25,22 @@ import javax.inject.Inject
  *
  * @see MainActivity
  */
-class MainActivityViewModel(
-    var currentUser: LiveData<CurrentUser>,
-    var trainingRecords: LiveData<List<TrainingRecord>>
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
+    dao: UserDao,
+    @ApplicationContext application: Context,
+    private val client: HttpApi
 ) : ViewModel() {
+
+    val currentUser: LiveData<CurrentUser>
+    val trainingRecords: LiveData<List<TrainingRecord>>
+
+    init {
+        val sessionHash = (application as SystemApplication).session.hashCode()
+        currentUser = dao.getCurrentUser(sessionHash)
+        trainingRecords = dao.getTrainingRecords()
+        Log.e("Init", currentUser.value?.sessionHash.toString())
+    }
 
     companion object {
 
@@ -39,27 +54,6 @@ class MainActivityViewModel(
 
         class Success(val data: CurrentUser) : GetUserResult()
         class Error(val exception: Throwable) : GetUserResult()
-    }
-
-    @Inject
-    lateinit var client: HttpApi
-
-    /**
-     * 初始化此ViewModel的工厂。
-     *
-     * @param dao 操作数据库使用的dao对象。
-     * @param sessionHash 当前登录用户的Session的HashCode。
-     */
-    class Factory(private val dao: UserDao, private val sessionHash: Int) :
-        ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return MainActivityViewModel(
-                dao.getCurrentUser(sessionHash),
-                dao.getTrainingRecords()
-            ) as T
-        }
     }
 
     /**

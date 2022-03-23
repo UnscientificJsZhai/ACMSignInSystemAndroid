@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.preference.*
@@ -37,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var systemApplication: SystemApplication
 
-    private val viewModel by viewModels<SettingsActivityViewModel>()
+    private val viewModel by activityViewModels<SettingsActivityViewModel>()
 
     private var jumpToWebPreference: Preference? = null
     private var refreshPreference: Preference? = null

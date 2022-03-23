@@ -1,8 +1,8 @@
 package xyz.orangej.acmsigninsystemandroid.api
 
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
 import xyz.orangej.acmsigninsystemandroid.util.formattedSession
@@ -24,10 +24,11 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/login/")
-    fun login(
+    @FormUrlEncoded
+    suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
-    ): Response<ResponseBody>
+    ): Response<String>
 
     /**
      * 进行登出请求。
@@ -36,7 +37,7 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/logout")
-    fun logout(@Header("Cookie") formattedSession: String): Response<ResponseBody>
+    suspend fun logout(@Header("Cookie") formattedSession: String): Response<String>
 
     /**
      * 请求用户数据。
@@ -45,19 +46,20 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/getuserinfo/")
-    fun getUserInfo(@Header("Cookie") formattedSession: String): Response<ResponseBody>
+    suspend fun getUserInfo(@Header("Cookie") formattedSession: String): Response<String>
 
     /**
      * 获取训练记录。
      */
     //TODO 确认接口信息
     @POST("api/getrecord/")
-    fun getTrainHistory(
+    @FormUrlEncoded
+    suspend fun getTrainHistory(
         @Header("Cookie") formattedSession: String,
+        @Field("id") id: Int? = null,
         @Field("start") start: Int? = null,
-        @Field("amount") amount: Int? = null,
-        @Field("id") id: String? = null
-    ): Response<ResponseBody>
+        @Field("amount") amount: Int? = null
+    ): Response<String>
 
     /**
      * 请求特定的训练记录。
@@ -67,10 +69,11 @@ interface HttpApi {
      * @return 特定的训练记录。响应结果。
      */
     @POST("api/getspecificrecord/")
-    fun getSpecificTrainingHistory(
+    @FormUrlEncoded
+    suspend fun getSpecificTrainingHistory(
         @Header("Cookie") formattedSession: String,
         @Field("id") id: Long
-    ): Response<ResponseBody>
+    ): Response<String>
 
     /**
      * 签到。
@@ -82,12 +85,13 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/signin/")
-    fun signIn(
+    @FormUrlEncoded
+    suspend fun signIn(
         @Header("Cookie") formattedSession: String,
         @Field("csrf_token") csrfToken: String,
         @Field("token") token: String,
         @Field("time") time: String
-    ): Response<ResponseBody>
+    ): Response<String>
 
     /**
      * 注册。
@@ -103,7 +107,8 @@ interface HttpApi {
      * @return 响应结果。
      */
     @POST("api/register/")
-    fun signUp(
+    @FormUrlEncoded
+    suspend fun signUp(
         @Field("username") username: String,
         @Field("password") password: String,
         @Field("name") name: String,
@@ -112,7 +117,7 @@ interface HttpApi {
         @Field("adminVerify") adminVerify: String,
         @Field("email") email: String,
         @Field("emailVerify") emailVerify: String
-    ): Response<ResponseBody>
+    ): Response<String>
 
     /**
      * 获取邮箱验证码的方法。
@@ -122,8 +127,9 @@ interface HttpApi {
      * @return 响应结果的json字符串。
      */
     @POST("api/getemailcode/")
-    fun getEmailCode(
+    @FormUrlEncoded
+    suspend fun getEmailCode(
         @Field("username") username: String,
         @Field("email") email: String
-    ): Response<ResponseBody>
+    ): Response<String>
 }
