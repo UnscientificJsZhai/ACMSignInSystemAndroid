@@ -158,7 +158,7 @@ class SignUpActivityViewModel : ViewModel() {
 
         val response = try {
             withContext(Dispatchers.IO) {
-                this@SignUpActivityViewModel.client.callGetEmailCode(context,username, email)
+                this@SignUpActivityViewModel.client.callGetEmailCode(context, username, email)
             }
         } catch (e: IOException) {
             return false

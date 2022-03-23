@@ -6,15 +6,16 @@ import android.content.Context
 import android.util.Patterns
 import androidx.preference.PreferenceManager
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * 通用的MIME-Type。
  */
 private val mediaType: MediaType
-    get() = MediaType.parse("application/x-www-form-urlencoded")!!
+    get() = "application/x-www-form-urlencoded".toMediaType()
 
 /**
  * 为Request添加Session。
@@ -44,10 +45,8 @@ fun Request.Builder.addUA(): Request.Builder =
  * @return 响应结果json字符串。
  */
 fun OkHttpClient.callLogin(context: Context, userName: String, password: String): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        "username=$userName&password=$password"
-    )
+    val requestBody = "username=$userName&password=$password"
+        .toRequestBody(mediaType)
     val request = Request.Builder()
         .url(loginURL(context.getServerRoot()))
         .method("POST", requestBody)
@@ -56,7 +55,7 @@ fun OkHttpClient.callLogin(context: Context, userName: String, password: String)
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -67,10 +66,7 @@ fun OkHttpClient.callLogin(context: Context, userName: String, password: String)
  * @return 响应结果json字符串。
  */
 fun OkHttpClient.callLogout(context: Context, session: String): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        ""
-    )
+    val requestBody = "".toRequestBody(mediaType)
     val request = Request.Builder()
         .url(logoutURL(context.getServerRoot()))
         .addSession(session)
@@ -79,7 +75,7 @@ fun OkHttpClient.callLogout(context: Context, session: String): String? {
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -90,10 +86,7 @@ fun OkHttpClient.callLogout(context: Context, session: String): String? {
  * @return 响应结果json字符串。
  */
 fun OkHttpClient.callGetUserInfo(context: Context, session: String): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        ""
-    )
+    val requestBody = "".toRequestBody(mediaType)
     val request = Request.Builder()
         .url(userInfoURL(context.getServerRoot()))
         .addSession(session)
@@ -102,7 +95,7 @@ fun OkHttpClient.callGetUserInfo(context: Context, session: String): String? {
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -113,14 +106,11 @@ fun OkHttpClient.callGetUserInfo(context: Context, session: String): String? {
  * @return 响应结果的json字符串。
  */
 fun OkHttpClient.callGetTrainingHistory(context: Context, session: String, id: Int): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        if (id == 0) {
-            ""
-        } else {
-            "id=$id"
-        }
-    )
+    val requestBody = (if (id == 0) {
+        ""
+    } else {
+        "id=$id"
+    }).toRequestBody(mediaType)
     val request = Request.Builder()
         .url(trainingHistoryURL(context.getServerRoot()))
         .addSession(session)
@@ -129,7 +119,7 @@ fun OkHttpClient.callGetTrainingHistory(context: Context, session: String, id: I
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -145,10 +135,7 @@ fun OkHttpClient.callGetSpecificTrainingHistory(
     session: String,
     id: Long
 ): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        "id=$id"
-    )
+    val requestBody = "id=$id".toRequestBody(mediaType)
     val request = Request.Builder()
         .url(specificTrainingHistoryURL(context.getServerRoot()))
         .addSession(session)
@@ -157,7 +144,7 @@ fun OkHttpClient.callGetSpecificTrainingHistory(
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -177,10 +164,8 @@ fun OkHttpClient.callSignIn(
     token: String,
     time: String
 ): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        "csrf_token=$csrfToken&token=$token&time=$time"
-    )
+    val requestBody = "csrf_token=$csrfToken&token=$token&time=$time"
+        .toRequestBody(mediaType)
     val request = Request.Builder()
         .url(signInURL(context.getServerRoot()))
         .addSession(session)
@@ -189,7 +174,7 @@ fun OkHttpClient.callSignIn(
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -217,10 +202,9 @@ fun OkHttpClient.callSignUp(
     email: String,
     emailVerify: String
 ): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
+    val requestBody =
         "username=$username&password=$password&name=$name&department=$department&admin=$admin&adminVerify=$adminVerify&email=$email&emailVerify=$emailVerify"
-    )
+            .toRequestBody(mediaType)
     val request = Request.Builder()
         .url(registerURL(context.getServerRoot()))
         .method("POST", requestBody)
@@ -228,7 +212,7 @@ fun OkHttpClient.callSignUp(
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -244,10 +228,8 @@ fun OkHttpClient.callGetEmailCode(
     username: String,
     email: String
 ): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        "username=$username&email=$email"
-    )
+    val requestBody = "username=$username&email=$email"
+        .toRequestBody(mediaType)
     val request = Request.Builder()
         .url(getEmailCodeURL(context.getServerRoot()))
         .method("POST", requestBody)
@@ -255,7 +237,7 @@ fun OkHttpClient.callGetEmailCode(
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -265,12 +247,9 @@ fun OkHttpClient.callGetEmailCode(
  * @return 响应结果的json字符串。
  */
 fun OkHttpClient.callCheckApi(
-    serverRoot:String
+    serverRoot: String
 ): String? {
-    val requestBody = RequestBody.create(
-        mediaType,
-        ""
-    )
+    val requestBody = "".toRequestBody(mediaType)
     val request = Request.Builder()
         .url(checkApiURL(serverRoot))
         .method("POST", requestBody)
@@ -278,7 +257,7 @@ fun OkHttpClient.callCheckApi(
 
     val call = this.newCall(request)
     val response = call.execute()
-    return response.body()?.string()
+    return response.body?.string()
 }
 
 /**
@@ -298,7 +277,7 @@ fun Context.getServerRoot(): String {
  * @param original 输入服务器地址。
  * @return 格式化后的服务器地址。
  */
-fun formatServerAddress(original: String): String {
+private fun formatServerAddress(original: String): String {
     return if (Patterns.WEB_URL.matcher(original).matches()) {
         var current = original
         while (current.endsWith("/")) {

@@ -28,7 +28,7 @@ class LoginDataSource {
     fun login(context: Context, username: String, password: String): Result<LoggedInUser> {
         try {
             val responseBody = client.callLogin(context, username, password)
-            Log.e("LoginDataSource", "login: $responseBody", )
+            Log.e("LoginDataSource", "login: $responseBody")
             val responseJsonObject =
                 JSONObject(
                     responseBody ?: return Result.Error(IOException("Empty response"))

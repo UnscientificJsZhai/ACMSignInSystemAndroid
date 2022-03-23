@@ -111,7 +111,7 @@ class SettingsActivityViewModel : ViewModel() {
      * @param server 服务器地址。
      * @return 服务器是否合法。
      */
-    suspend fun checkApi(server:String): Boolean {
+    suspend fun checkApi(server: String): Boolean {
         val response = withContext(Dispatchers.IO) {
             try {
                 this@SettingsActivityViewModel.httpClient.callCheckApi(server)

@@ -24,7 +24,8 @@ import xyz.orangej.acmsigninsystemandroid.databinding.ActivityMainBinding
 import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.ErrorCode.*
-import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.SuccessType.*
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.SuccessType.END
+import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivityViewModel.SignInResult.SuccessType.START
 import xyz.orangej.acmsigninsystemandroid.ui.main.fragments.home.HomeFragment
 import java.net.SocketException
 import javax.net.ssl.SSLHandshakeException

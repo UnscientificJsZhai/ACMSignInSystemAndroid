@@ -68,10 +68,10 @@ class MainActivityViewModel(
      *
      * @param session
      */
-    suspend fun getCurrentUser(context: Context,session: String): GetUserResult {
+    suspend fun getCurrentUser(context: Context, session: String): GetUserResult {
         val jsonString = try {
             withContext(Dispatchers.IO) {
-                this@MainActivityViewModel.httpClient.callGetUserInfo(context,session)
+                this@MainActivityViewModel.httpClient.callGetUserInfo(context, session)
             } ?: return GetUserResult.Error(RuntimeException("空返回结果"))
         } catch (e: Exception) {
             return GetUserResult.Error(e)
@@ -117,11 +117,19 @@ class MainActivityViewModel(
      * @param startAt 起始ID。为0则为获取全部。
      * @return 新增的训练记录列表。
      */
-    suspend fun getTrainHistory(context: Context,session: String, startAt: Int = 0): List<TrainingRecord> {
+    suspend fun getTrainHistory(
+        context: Context,
+        session: String,
+        startAt: Int = 0
+    ): List<TrainingRecord> {
         val jsonString =
             withContext(Dispatchers.IO) {
                 try {
-                    this@MainActivityViewModel.httpClient.callGetTrainingHistory(context ,session, startAt)
+                    this@MainActivityViewModel.httpClient.callGetTrainingHistory(
+                        context,
+                        session,
+                        startAt
+                    )
                 } catch (e: java.lang.Exception) {
                     null
                 }
@@ -181,10 +189,18 @@ class MainActivityViewModel(
      * @param id 要重新获取的记录的ID。
      * @return 特定的训练记录。
      */
-    suspend fun getSpecificTrainingHistory(context: Context,session: String, id: Long): TrainingRecord? {
+    suspend fun getSpecificTrainingHistory(
+        context: Context,
+        session: String,
+        id: Long
+    ): TrainingRecord? {
         val jsonString = withContext(Dispatchers.IO) {
             try {
-                this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(context ,session, id)
+                this@MainActivityViewModel.httpClient.callGetSpecificTrainingHistory(
+                    context,
+                    session,
+                    id
+                )
             } catch (e: IOException) {
                 null
             }
@@ -259,7 +275,7 @@ class MainActivityViewModel(
      * @return 服务器响应结果。
      */
     suspend fun signIn(
-        context:Context,
+        context: Context,
         session: String,
         csrfToken: String,
         token: String,
@@ -267,7 +283,13 @@ class MainActivityViewModel(
     ): SignInResult {
         val response = withContext(Dispatchers.IO) {
             try {
-                this@MainActivityViewModel.httpClient.callSignIn(context,session, csrfToken, token, time)
+                this@MainActivityViewModel.httpClient.callSignIn(
+                    context,
+                    session,
+                    csrfToken,
+                    token,
+                    time
+                )
             } catch (e: IOException) {
                 ""
             }

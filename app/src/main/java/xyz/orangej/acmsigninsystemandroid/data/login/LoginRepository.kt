@@ -11,22 +11,11 @@ import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
  */
 class LoginRepository(private val dataSource: LoginDataSource) {
 
-    // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null
         private set
 
-    val isLoggedIn: Boolean
-        get() = user != null
-
-    init {
-        // If UserFragment credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
-    }
-
     @WorkerThread
     fun login(context: Context, username: String, password: String): Result<LoggedInUser> {
-        // handle login
         val result = dataSource.login(context, username, password)
 
         if (result is Result.Success) {

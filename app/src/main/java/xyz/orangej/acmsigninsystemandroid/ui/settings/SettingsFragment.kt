@@ -53,6 +53,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             accountPreferences?.isEnabled = false
         }
 
+        // 在网页中打开的选项
         jumpToWebPreference = findPreference(WEB_KEY)
         jumpToWebPreference?.setOnPreferenceClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
@@ -62,6 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        // 重新刷新数据的选项
         refreshPreference = findPreference(REFRESH_KEY)
         refreshPreference?.setOnPreferenceClickListener {
             viewModel.viewModelScope.launch {
@@ -82,6 +84,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        // 登出的选项
         logoutPreference = findPreference(LOGOUT_KEY)
         logoutPreference?.setOnPreferenceClickListener {
             val session = systemApplication.session
@@ -96,6 +99,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        // 手动输入服务器的选项
         serverPreference = findPreference(SERVER_KEY)
         serverPreference?.setOnPreferenceChangeListener { _, newValue ->
             if (Patterns.WEB_URL.matcher(newValue.toString()).matches()) {
