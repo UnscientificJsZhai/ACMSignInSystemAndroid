@@ -10,6 +10,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import xyz.orangej.acmsigninsystemandroid.di.RetrofitApiModule.getServerRoot
 
 /**
  * 通用的MIME-Type。
@@ -258,33 +259,4 @@ fun OkHttpClient.callCheckApi(
     val call = this.newCall(request)
     val response = call.execute()
     return response.body?.string()
-}
-
-/**
- * 从SharedPreference中读取服务器地址信息。
- *
- * @return 服务器地址。在存储之前就先确认过作为URL的合法性。
- */
-fun Context.getServerRoot(): String {
-    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val serverAddress = sharedPreferences.getString("server", "https://www.orangej.xyz")!!
-    return formatServerAddress(serverAddress)
-}
-
-/**
- * 格式化服务器地址。移除末尾的斜杠。
- *
- * @param original 输入服务器地址。
- * @return 格式化后的服务器地址。
- */
-private fun formatServerAddress(original: String): String {
-    return if (Patterns.WEB_URL.matcher(original).matches()) {
-        var current = original
-        while (current.endsWith("/")) {
-            current = current.substring(0, current.lastIndex)
-        }
-        current
-    } else {
-        "https://www.orangej.xyz"
-    }
 }

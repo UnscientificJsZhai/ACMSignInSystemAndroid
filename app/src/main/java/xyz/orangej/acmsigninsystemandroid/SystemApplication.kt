@@ -2,17 +2,19 @@ package xyz.orangej.acmsigninsystemandroid
 
 import android.app.Application
 import android.content.SharedPreferences
-import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import dagger.hilt.android.HiltAndroidApp
 import xyz.orangej.acmsigninsystemandroid.data.login.LoginDataSource
 import xyz.orangej.acmsigninsystemandroid.data.login.LoginRepository
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserInformationDatabase
+import javax.inject.Inject
 import kotlin.reflect.KProperty
 
 /**
  * 全局Application类。
  */
+@HiltAndroidApp
 class SystemApplication : Application() {
 
     companion object {
@@ -27,15 +29,9 @@ class SystemApplication : Application() {
         private set
     private lateinit var mainStorage: SharedPreferences
 
-    private val database: UserInformationDatabase by lazy {
-        Room.databaseBuilder(
-            this,
-            UserInformationDatabase::class.java,
-            "database.db"
-        ).build()
-    }
-        @JvmName("_getDatabase")
-        get
+    @Inject
+    lateinit var database: UserInformationDatabase
+        @JvmName("_getDatabase") get
 
     /**
      * 保存的session数据。

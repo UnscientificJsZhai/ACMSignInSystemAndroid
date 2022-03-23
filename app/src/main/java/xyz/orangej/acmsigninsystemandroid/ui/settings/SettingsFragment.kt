@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.SystemApplication
-import xyz.orangej.acmsigninsystemandroid.api.getServerRoot
+import xyz.orangej.acmsigninsystemandroid.di.RetrofitApiModule.getServerRoot
 import xyz.orangej.acmsigninsystemandroid.ui.ProgressDialog
 import xyz.orangej.acmsigninsystemandroid.ui.login.LoginActivity
 import kotlin.concurrent.thread
