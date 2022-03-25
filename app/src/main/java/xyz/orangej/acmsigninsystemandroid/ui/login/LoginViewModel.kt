@@ -10,6 +10,11 @@ import xyz.orangej.acmsigninsystemandroid.R
 import xyz.orangej.acmsigninsystemandroid.data.login.LoginRepository
 import xyz.orangej.acmsigninsystemandroid.data.login.Result
 
+/**
+ * 登录Activity的ViewModel
+ *
+ * @see LoginActivity
+ */
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
     companion object {

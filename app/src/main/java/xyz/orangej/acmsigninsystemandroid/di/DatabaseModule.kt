@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserInformationDatabase
 import javax.inject.Singleton
 
@@ -19,6 +20,9 @@ object DatabaseModule {
 
     /**
      * 提供数据库实例的方法。提供一个单例的数据库对象。
+     *
+     * @param context 应用程序级Context。
+     * @return 生成的数据库对象。
      */
     @Provides
     @Singleton
@@ -30,6 +34,12 @@ object DatabaseModule {
         ).build()
     }
 
+    /**
+     * 提供数据库Dao对象的方法。
+     *
+     * @param database 数据库对象。
+     * @return [UserDao]的实现对象。
+     */
     @Provides
     @Singleton
     fun provideDao(database: UserInformationDatabase) = database.userDao()

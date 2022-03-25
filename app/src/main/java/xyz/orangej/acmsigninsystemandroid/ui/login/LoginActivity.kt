@@ -27,6 +27,9 @@ import xyz.orangej.acmsigninsystemandroid.ui.login.sign.SignUpActivity
 import xyz.orangej.acmsigninsystemandroid.ui.main.MainActivity
 import xyz.orangej.acmsigninsystemandroid.ui.settings.SettingsActivity
 
+/**
+ * 登录Activity。
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var systemApplication: SystemApplication

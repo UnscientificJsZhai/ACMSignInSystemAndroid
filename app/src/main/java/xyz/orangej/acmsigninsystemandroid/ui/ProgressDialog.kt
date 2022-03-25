@@ -14,6 +14,7 @@ import xyz.orangej.acmsigninsystemandroid.R
  *
  * @param context 显示Dialog的Activity。
  */
+@Suppress("unused")
 class ProgressDialog(private val context: Activity) {
 
     private val builder = AlertDialog.Builder(context)

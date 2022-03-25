@@ -23,6 +23,11 @@ import javax.inject.Singleton
 @Module
 object RetrofitApiModule {
 
+    /**
+     * 提供常规OkHttpClient。这个Client会对每个请求添加ContentType和User-Agent头。
+     *
+     * @return 构造好的OkHttpClient。
+     */
     @Provides
     @Singleton
     @NormalOkHttpClient
@@ -38,24 +43,31 @@ object RetrofitApiModule {
             chain.proceed(request)
         }.build()
 
+    /**
+     * 提供仅供测试API的OkHttpClient。这个Client只能用来测试API，不应该用它来发送其它请求。
+     */
     @Provides
     @Singleton
     @TestOkHttpClient
     fun provideTestClient() = OkHttpClient()
 
+    /**
+     * 提供Retrofit对象。
+     *
+     * @param okHttpClient 需要提供一个OkHttpClient。
+     * @param context 应用程序级Context。
+     */
     @Provides
     @Singleton
     fun provideRetrofit(
         @NormalOkHttpClient okHttpClient: OkHttpClient,
         @ApplicationContext context: Context
-    ): HttpApi {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(context.getServerRoot())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-        return retrofit.create(HttpApi::class.java)
-    }
+    ): HttpApi = Retrofit.Builder()
+        .baseUrl(context.getServerRoot())
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .client(okHttpClient)
+        .build()
+        .create(HttpApi::class.java)
 
     /**
      * 从SharedPreference中读取服务器地址信息。

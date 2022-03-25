@@ -12,6 +12,7 @@ import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.api.TestOkHttpClient
 import xyz.orangej.acmsigninsystemandroid.api.callCheckApi
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
+import xyz.orangej.acmsigninsystemandroid.data.user.database.UserInformationDatabase
 import xyz.orangej.acmsigninsystemandroid.util.formattedSession
 import xyz.orangej.acmsigninsystemandroid.util.string
 import javax.inject.Inject

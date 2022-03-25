@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import xyz.orangej.acmsigninsystemandroid.data.login.LoginRepository
 
 /**
- * ViewModel provider factory to instantiate LoginViewModel.
- * Required given LoginViewModel has a non-empty constructor
+ * 提供[LoginViewModel]的工厂类。
+ *
+ * @see LoginViewModel
  */
 class LoginViewModelFactory(private val loginRepository: LoginRepository) :
     ViewModelProvider.Factory {

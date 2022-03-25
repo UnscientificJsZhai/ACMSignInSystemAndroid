@@ -1,6 +1,5 @@
 package xyz.orangej.acmsigninsystemandroid.data.login
 
-import android.content.Context
 import androidx.annotation.WorkerThread
 import xyz.orangej.acmsigninsystemandroid.data.login.model.LoggedInUser
 
@@ -15,7 +14,7 @@ class LoginRepository(private val dataSource: LoginDataSource) {
         private set
 
     @WorkerThread
-    fun login( username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String): Result<LoggedInUser> {
         val result = dataSource.login(username, password)
 
         if (result is Result.Success) {

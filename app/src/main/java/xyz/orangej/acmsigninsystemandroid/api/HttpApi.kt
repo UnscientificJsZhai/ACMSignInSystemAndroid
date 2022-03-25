@@ -50,14 +50,16 @@ interface HttpApi {
 
     /**
      * 获取训练记录。
+     *
+     * @param formattedSession 用户的Session。必须格式化后才能使用。
+     * @param id 训练记录编号。默认为null。获取所有编号大于此参数值的记录。
+     * @param amount 获取的数量。默认为null，即为尽可能多获取。
      */
-    //TODO 确认接口信息
     @POST("api/getrecord/")
     @FormUrlEncoded
     suspend fun getTrainHistory(
         @Header("Cookie") formattedSession: String,
         @Field("id") id: Int? = null,
-        @Field("start") start: Int? = null,
         @Field("amount") amount: Int? = null
     ): Response<String>
 
