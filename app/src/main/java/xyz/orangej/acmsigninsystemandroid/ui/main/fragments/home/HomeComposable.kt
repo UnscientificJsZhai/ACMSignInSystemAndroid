@@ -16,6 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import xyz.orangej.acmsigninsystemandroid.R
 
+/**
+ * 主页。
+ *
+ * @param onButtonClick 按下按钮时的回调函数。
+ */
 @Composable
 fun HomePage(onButtonClick: () -> Unit) {
     ConstraintLayout(

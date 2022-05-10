@@ -189,7 +189,7 @@ class SignUpActivity : AppCompatActivity() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 12.dp),
-                    color = mainTextColor(),
+                    color = mainTextColor,
                     fontSize = 36.sp
                 )
 

@@ -57,7 +57,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         jumpToWebPreference = findPreference(WEB_KEY)
         jumpToWebPreference?.setOnPreferenceClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(requireContext().getServerRoot())
+            intent.data = Uri.parse(getServerRoot(requireContext()))
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             true
@@ -103,7 +103,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         serverPreference = findPreference(SERVER_KEY)
         serverPreference?.setOnPreferenceChangeListener { _, newValue ->
             if (Patterns.WEB_URL.matcher(newValue.toString()).matches()) {
-                val oldValue = requireContext().getServerRoot()
+                val oldValue = getServerRoot(requireContext())
                 thread {
                     runBlocking(Dispatchers.Main) {
                         onUpdateServerConfig(oldValue, newValue.toString())

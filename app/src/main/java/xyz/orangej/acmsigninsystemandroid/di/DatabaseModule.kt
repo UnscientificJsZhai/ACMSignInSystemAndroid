@@ -14,8 +14,8 @@ import javax.inject.Singleton
 /**
  * 为Room数据库提供Hilt依赖注入的Module。
  */
-@InstallIn(SingletonComponent::class)
 @Module
+@InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
     /**

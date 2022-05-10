@@ -31,8 +31,7 @@ object RetrofitApiModule {
     @Provides
     @Singleton
     @NormalOkHttpClient
-    fun provideOkHttpClient() = OkHttpClient()
-        .newBuilder()
+    fun provideOkHttpClient() = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val request = chain.request()
                 .newBuilder()
@@ -63,7 +62,7 @@ object RetrofitApiModule {
         @NormalOkHttpClient okHttpClient: OkHttpClient,
         @ApplicationContext context: Context
     ): HttpApi = Retrofit.Builder()
-        .baseUrl(context.getServerRoot())
+        .baseUrl(getServerRoot(context))
         .addConverterFactory(ScalarsConverterFactory.create())
         .client(okHttpClient)
         .build()
@@ -74,8 +73,8 @@ object RetrofitApiModule {
      *
      * @return 服务器地址。在存储之前就先确认过作为URL的合法性。
      */
-    fun Context.getServerRoot(): String {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+    fun getServerRoot(context: Context): String {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val serverAddress = sharedPreferences.getString("server", "https://www.orangej.xyz")!!
         return formatServerAddress(serverAddress)
     }

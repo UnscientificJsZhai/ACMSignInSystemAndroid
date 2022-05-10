@@ -69,7 +69,7 @@ class InfoActivity : AppCompatActivity() {
 
             Text(
                 text = stringResource(R.string.app_name),
-                color = mainTextColor(),
+                color = mainTextColor,
                 fontSize = 36.sp,
                 modifier = Modifier.constrainAs(title) {
                     top.linkTo(icon.bottom, 32.dp)

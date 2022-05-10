@@ -22,11 +22,8 @@ import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 
 /**
  * 强调文字的颜色。根据系统深色模式配置更改。
- *
- * @return 用于Compose的Color。
  */
-@Composable
-fun mainTextColor() = if (isSystemInDarkTheme()) {
+val mainTextColor @Composable get() = if (isSystemInDarkTheme()) {
     Color.White
 } else {
     Color.Black
@@ -97,7 +94,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                     TrainingRecord.STATUS_RECORDED -> Text(
                         text = stringResource(R.string.trainingRecord_status_3),
                         modifier = statusModifier,
-                        color = mainTextColor()
+                        color = mainTextColor
                     )
                 }
 
@@ -121,7 +118,7 @@ fun TrainingHistoryCard(data: TrainingRecord) {
                         }
                     },
                     fontSize = 26.sp,
-                    color = mainTextColor()
+                    color = mainTextColor
                 )
 
                 if (expanded) {

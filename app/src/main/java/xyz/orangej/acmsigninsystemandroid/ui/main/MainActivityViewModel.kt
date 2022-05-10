@@ -15,7 +15,7 @@ import xyz.orangej.acmsigninsystemandroid.api.HttpApi
 import xyz.orangej.acmsigninsystemandroid.data.user.CurrentUser
 import xyz.orangej.acmsigninsystemandroid.data.user.TrainingRecord
 import xyz.orangej.acmsigninsystemandroid.data.user.database.UserDao
-import xyz.orangej.acmsigninsystemandroid.util.formattedSession
+import xyz.orangej.acmsigninsystemandroid.util.formatSession
 import xyz.orangej.acmsigninsystemandroid.util.string
 import java.io.IOException
 import javax.inject.Inject
@@ -64,7 +64,7 @@ class MainActivityViewModel @Inject constructor(
     suspend fun getCurrentUser(session: String): GetUserResult {
         val jsonString = try {
             withContext(Dispatchers.IO) {
-                this@MainActivityViewModel.client.getUserInfo(formattedSession(session)).string()
+                this@MainActivityViewModel.client.getUserInfo(formatSession(session)).string()
             }
         } catch (e: Exception) {
             return GetUserResult.Error(e)
@@ -118,7 +118,7 @@ class MainActivityViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     this@MainActivityViewModel.client.getTrainHistory(
-                        formattedSession(session),
+                        formatSession(session),
                         startAt
                     ).string()
                 } catch (e: java.lang.Exception) {

@@ -42,7 +42,7 @@ fun InformationPage(data: CurrentUser, onLogout: () -> Unit) {
                 end.linkTo(parent.end, 16.dp)
                 top.linkTo(parent.top, 8.dp)
             },
-            color = mainTextColor()
+            color = mainTextColor
         )
 
         Column(

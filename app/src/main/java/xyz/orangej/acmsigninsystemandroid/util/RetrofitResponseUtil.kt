@@ -16,4 +16,4 @@ fun Response<String>.string(): String = this.body() ?: ""
  * @param session Session的ID。
  * @return 格式化后的SessionID。格式化后才可传入Retrofit请求方法作为session参数。
  */
-fun formattedSession(session: String) = "sessionid=$session"
+fun formatSession(session: String) = "sessionid=$session"

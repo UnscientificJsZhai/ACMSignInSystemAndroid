@@ -5,14 +5,14 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
-import xyz.orangej.acmsigninsystemandroid.util.formattedSession
+import xyz.orangej.acmsigninsystemandroid.util.formatSession
 
 /**
  * Retrofit API接口。
  *
- * 其中所有需要Session作为参数的方法，都需要格式化后再传入。格式化方法为[formattedSession]。
+ * 其中所有需要Session作为参数的方法，都需要格式化后再传入。格式化方法为[formatSession]。
  *
- * @see formattedSession
+ * @see formatSession
  */
 interface HttpApi {
 
